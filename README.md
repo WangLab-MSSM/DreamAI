@@ -2,7 +2,8 @@
 
 The function DreamAI imputes a dataset with missing values or NA's using 7 different methods: 
 
- - "KNN": k nearest neighbor "MissForest": nonparametric Missing Value
+ - "KNN": k nearest neighbor 
+ - "MissForest": nonparametric Missing Value
    Imputation using Random Forest 
   - "ADMIN": abundance dependent missing
    imputation
