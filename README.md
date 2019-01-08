@@ -41,6 +41,8 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
 | conv_nrmse			             | 1e-06     	     | convergence threshold for "RegImpute"
 | iter_SpectroFM		    | 40     	     | number of iterations for "SpectroFM"
 | method		      | c("KNN","MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute", "Ensemble")     	   | a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble"). Default is "Ensemble" if nothing is specified
+| out		      | c("Ensemble")     	   | a vector of imputation methods for which the function will output the imputed matrices
+
 	
 # Value
 a list of imputed datasets by different methods as specified by the user. Always returns imputed data by "Ensemble"
