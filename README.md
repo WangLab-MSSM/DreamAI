@@ -14,14 +14,15 @@ The function DreamAI imputes a dataset with missing values or NA's using 7 diffe
    using simple average.
 
 ## Usage
-
+```
 DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
   maxnodes = NULL, maxiter_ADMIN = 30, tol = 10^(-2),
   gamma_ADMIN = NA, gamma = 50, CV = FALSE,
   fillmethod = "row_mean", maxiter_RegImpute = 10,
   conv_nrmse = 1e-06, iter_SpectroFM = 40, method = c("KNN",
-  "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute", "Ensemble"))
-
+  "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),
+  out = c("Ensemble"))
+```
 ## Arguments
   
 | Parameter                 | Default       | Description   |	
@@ -47,10 +48,13 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
 # Value
 a list of imputed datasets by different methods as specified by the user. Always returns imputed data by "Ensemble"
 
+# Note
+If all methods are specified for obtaining "Ensemble" imputed matrix, the approximate time required to output the imputed matrix for a dataset of dimension 26000 x 200 is ~50 hours.
+
 # Examples
 ```
 data(datapnnl)
 data<-datapnnl.rm.ref[1:100,1:21]
-impute<- DreamAI(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40, method = c("Ensemble"))
+impute<- DreamAI(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40, method = c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),out="Ensemble")
 impute$Ensemble
 ```
