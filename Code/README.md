@@ -1,4 +1,6 @@
-# Description
+[Description](#description)
+
+## Description
 
 The function DreamAI imputes a dataset with missing values or NA's using 7 different methods: 
 
@@ -13,7 +15,7 @@ The function DreamAI imputes a dataset with missing values or NA's using 7 diffe
    -  "Ensemble": aggregation of the 6 methods
    using simple average.
 
-## Usage
+# Usage
 ```
 DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
   maxnodes = NULL, maxiter_ADMIN = 30, tol = 10^(-2),
@@ -23,7 +25,7 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
   "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),
   out = c("Ensemble"))
 ```
-## Arguments
+# Arguments
   
 | Parameter                 | Default       | Description   |	
 | :------------------------ |:-------------:| :-------------|
