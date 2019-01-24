@@ -1,6 +1,3 @@
-Functions
-[DreamAI](#dreamAI::dreamAI)
-
 ## DreamAI::DreamAI
 - [Description](#description)
 - [Usage] (#usage)
