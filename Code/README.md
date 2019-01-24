@@ -1,3 +1,4 @@
+
 ## DreamAI::DreamAI
 - [Description](#description)
 - [Usage](#usage)
@@ -6,7 +7,7 @@
 - [Notes](#notes)
 - [Example](#example)
 
-## Description
+### Description
 
 The function DreamAI imputes a dataset with missing values or NA's using 7 different methods: 
 
