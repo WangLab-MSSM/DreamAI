@@ -27,7 +27,7 @@ DreamAI_Bagging(data, k = 10, maxiter_MF = 10, ntree = 100,
 
 \item{tol}{convergence threshold for "ADMIN"}
 
-\item{gamma_ADMIN}{parameter for ADMIN to control abundance dependent missing. Default is 0 (for log ratio intensity data). For abundance data put gamma=NA, and it will be estimated accordingly}
+\item{gamma_ADMIN}{parameter for ADMIN to control abundance dependent missing. Set gamma_ADMIN=0 for log ratio intensity data. For abundance data put gamma_ADMIN=NA, and it will be estimated accordingly}
 
 \item{gamma}{parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Brinn}
 
