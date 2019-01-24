@@ -1,8 +1,8 @@
 [DreamAI::DreamAI](#dreamaidreamai)
    - Imputation of Missing Protein Abundances with Iterative Prediction Model
-[DreamAI::DreamAI_Bagging](#dreamAI::dreamAI_Bagging)
-   - Bag Imputation of Missing Protein Abundances with Iterative Prediction Model
-
+[DreamAI::DreamAI_Bagging](#dreamaidreamaibagging)
+   - Imputation of Missing Protein Abundances with Iterative Prediction Model
+   
 ## DreamAI::DreamAI
 - [Description](#description)
 - [Usage](#usage)
