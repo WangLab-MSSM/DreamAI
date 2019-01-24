@@ -1,7 +1,6 @@
 Package: DreamAI
 Type: Package
-Title: Imputation missing values of a matrix or data.frame using
-        iterative prediction model
+Title: Imputation missing values of a matrix or data.frame using iterative prediction model
 Version: 0.1.0
 Author: Weiping Ma <weiping.ma@mssm.edu>
 Maintainer: Shrabanti Chowdhury <shrabanti.chowdhury@mssm.edu>
