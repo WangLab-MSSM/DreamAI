@@ -76,12 +76,12 @@ impute$Ensemble
 ```
 
 ## DreamAI::DreamAI_Bagging
-- [Description](#description)
-- [Usage](#usage)
-- [Arguments](#arguments)
-- [Value](#value)
-- [Notes](#notes)
-- [Example](#example)
+- [Description](#description-1)
+- [Usage](#usage-1)
+- [Arguments](#arguments-1)
+- [Value](#value-1)
+- [Notes](#notes-1)
+- [Example](#example-1)
 
 ### Description
 
@@ -138,11 +138,11 @@ impute$Ensemble
 ```
 
 ## DreamAI::bag.summary
-- [Description](#description)
-- [Usage](#usage)
-- [Arguments](#arguments)
-- [Value](#value)
-- [Example](#example)
+- [Description](#description-2)
+- [Usage](#usage-2)
+- [Arguments](#arguments-2)
+- [Value](#value-2)
+- [Example](#example-2)
 
 ### Description
 
