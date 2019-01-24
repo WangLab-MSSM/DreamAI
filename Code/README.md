@@ -3,7 +3,9 @@
    - Imputation of Missing Protein Abundances with Iterative Prediction Model
 - [DreamAI::DreamAI_Bagging](#dreamaidreamaibagging)
    - Bag Imputation of Missing Protein Abundances with Iterative Prediction Model
-   
+- [DreamAI::bag.summary](#dreamaibagsummary)
+   - Wrapper function for summarizing the outputs from DreamAI_bagging
+
 ## DreamAI::DreamAI
 - [Description](#description)
 - [Usage](#usage)
@@ -134,3 +136,42 @@ data<-datapnnl.rm.ref[1:100,1:21]
 impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute","Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\Users\\chowds14\\Desktop\\test_package\\",ProcessNum=1)
 impute$Ensemble
 ```
+
+## DreamAI::bag.summary
+- [Description](#description)
+- [Usage](#usage)
+- [Arguments](#arguments)
+- [Value](#value)
+- [Example](#example)
+
+### Description
+
+Wrapper function for summarizing the outputs from DreamAI_bagging
+
+### Usage
+```
+bag.summary(method = c("KNN", "MissForest", "ADMIN", "Brinn",
+  "SpectroFM", "RegImpute", "Ensemble"), nNodes = 2, path = NULL)
+```
+### Arguments
+  
+| Parameter                 | Default       | Description   |	
+| :------------------------ |:-------------:| :-------------|
+| method	       |c("KNN", "MissForest", "ADMIN", "Brinn",
+  "SpectroFM", "RegImpute", "Ensemble")	           |a vector of imputation methods. Default is "Ensemble" if nothing is specified
+| nNodes         | 2           |number of parallel processes
+| path 	       |NULL	            |location where the bagging output is saved
+	
+### Value
+list of final imputed data and confidence score for every gene using pseudo missing
+
+### Example
+```
+data(datapnnl)
+data<-datapnnl.rm.ref[1:100,1:21]
+impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute","Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\Users\\chowds14\\Desktop\\test_package\\",ProcessNum=1)
+final.out<-bag.summary(method=c("Ensemble"),nNodes=2,path="C:\\Users\\chowds14\\Desktop\\test_package\\")
+final.out$score
+final.out$imputed_data
+```
+
