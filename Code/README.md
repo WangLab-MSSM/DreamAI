@@ -22,7 +22,7 @@ The function DreamAI imputes a dataset with missing values or NA's using 7 diffe
    -  "Ensemble": aggregation of the 6 methods
    using simple average.
 
-## Usage
+### Usage
 ```
 DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
   maxnodes = NULL, maxiter_ADMIN = 30, tol = 10^(-2),
@@ -32,7 +32,7 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
   "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),
   out = c("Ensemble"))
 ```
-## Arguments
+### Arguments
   
 | Parameter                 | Default       | Description   |	
 | :------------------------ |:-------------:| :-------------|
@@ -54,13 +54,13 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
 | out		      | c("Ensemble")     	   | a vector of imputation methods for which the function will output the imputed matrices
 
 	
-## Value
+### Value
 a list of imputed datasets by different methods as specified by the user. Always returns imputed data by "Ensemble"
 
-## Notes
+### Notes
 If all methods are specified for obtaining "Ensemble" imputed matrix, the approximate time required to output the imputed matrix for a dataset of dimension 26000 x 200 is ~50 hours.
 
-## Example
+### Example
 ```
 data(datapnnl)
 data<-datapnnl.rm.ref[1:100,1:21]
