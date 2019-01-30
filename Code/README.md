@@ -117,7 +117,7 @@ DreamAI_Bagging(data, k = 10, maxiter_MF = 10, ntree = 100,
 | iter_SpectroFM		    | 40     	     | number of iterations for "SpectroFM"
 | method		      | must specify    | a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble")
 | SamplesPerBatch			             |      	     | number of samples per batch (batch size in the original data)
-| n.bag		    |      	     | number of pseudo datasets to generate and impute in the current process save.out logical indicator whether or not to save the output. When TRUE output is saved, when FALSE output is returned
+| n.bag		    |      	     | number of pseudo datasets to generate and impute in the current process   save.out |     | logical indicator whether or not to save the output. When TRUE output is saved, when FALSE output is returned
 | path		      | NULL	   | location to save the output file from the curent process. Path only needs to be specified when save.out=TRUE
 | ProcessNum		      |     	   | process number starting from 1 when run in cluster, e.g. 1 - 10, 1 - 100 etc. Needs to be specified only if the output is saved
 | out		      | c("Ensemble")     	   | a vector of imputation methods for which the function will output the imputed matrices. Default is Ensemble
