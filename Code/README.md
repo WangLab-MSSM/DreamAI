@@ -158,9 +158,8 @@ bag.summary(method = c("KNN", "MissForest", "ADMIN", "Brinn",
   
 | Parameter                 | Default       | Description   |	
 | :------------------------ |:-------------:| :-------------|
-| method	       |c("KNN", "MissForest", "ADMIN", "Brinn",
-  "SpectroFM", "RegImpute", "Ensemble")	           |a vector of imputation methods. Default is "Ensemble" if nothing is specified
-| nNodes         | 2           |number of parallel processes
+| method	       |c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute", "Ensemble")	           |a vector of imputation methods. This vector should be same or subset of the vector out in DreamAI_bagging. Default is "Ensemble" if nothing is specified
+| nNodes         |            |number of parallel processes
 | path 	       |NULL	            |location where the bagging output is saved
 	
 ### Value
