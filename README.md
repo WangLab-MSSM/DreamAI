@@ -1,4 +1,5 @@
 # Installation
+Install the packages: pamr, cluster, survival, randomForest, missForest, glmnet, foreach, itertools, iterators, Matrix
 Using the R package devtools
 ```
 install.packages("devtools")
