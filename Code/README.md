@@ -152,7 +152,7 @@ Wrapper function for summarizing the outputs from DreamAI_bagging
 ### Usage
 ```
 bag.summary(method = c("KNN", "MissForest", "ADMIN", "Brinn",
-  "SpectroFM", "RegImpute", "Ensemble"), nNodes = 2, path = NULL)
+  "SpectroFM", "RegImpute", "Ensemble"), nNodes = 3, path = NULL)
 ```
 ### Arguments
   
