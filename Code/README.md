@@ -125,7 +125,7 @@ DreamAI_Bagging(data, k = 10, maxiter_MF = 10, ntree = 100,
 
 	
 ### Value
-list of imputed dataset, n.bag and a matrix containing gene name, sample name, true and imputed values of every pseudo missing combined from n.bag datasets. Impute is a list of imputed datasets (average over all pseudo imputed data matrices) by different methods as specified by the user. Always returns imputed data by "Ensemble"
+list of imputed dataset (averaged over all pseudo imputed data matrices) by different methods as specified by the user, n.bag and a summary matrix containing gene name, sample name, true and imputed values of every pseudo missing combined from n.bag datasets. 
 
 ### Notes
 This function can be run as parallel job in cluster. It generates and saves a .RData file containing the output from the current process in the location provided by the user, with the process number in the file name. If the user runs it in local computer multiple times, then changing the ProcessNumber everytime will generate and save .RData file with the given ProcessNumber.
