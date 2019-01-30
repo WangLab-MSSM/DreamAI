@@ -115,7 +115,7 @@ DreamAI_Bagging(data, k = 10, maxiter_MF = 10, ntree = 100,
 | maxiter_RegImpute			     | 10         | maximum number of iterations to reach convergence in the imputation by "RegImpute"
 | conv_nrmse			             | 1e-06     	     | convergence threshold for "RegImpute"
 | iter_SpectroFM		    | 40     	     | number of iterations for "SpectroFM"
-| method		      | must specify    | a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble"). Default is "Ensemble" if nothing is specified
+| method		      | must specify    | a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble")
 | SamplesPerBatch			             |      	     | number of samples per batch (batch size in the original data)
 | n.bag		    |      	     | number of pseudo datasets to generate and impute in the current process save.out logical indicator whether or not to save the output. When TRUE output is saved, when FALSE output is returned
 | path		      | NULL	   | location to save the output file from the curent process. Path only needs to be specified when save.out=TRUE
