@@ -1,6 +1,6 @@
 #' Wrapper function for summarizing the outputs from DreamAI_bagging
 #'
-#' @param method a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble"). Default is "Ensemble" if nothing is specified
+#' @param method a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble"). This vector should be a subset or equal to the vector out in DreamAI_bagging.
 #' @param nNodes number of parallel processes 
 #' @param path location where the bagging output is saved
 #'
@@ -11,14 +11,22 @@
 #' \dontrun{
 #' data(datapnnl)
 #' data<-datapnnl.rm.ref[1:100,1:21]
-#' impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute","Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\Users\\chowds14\\Desktop\\test_package\\",ProcessNum=1)
+#' impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\Users\\chowds14\\Desktop\\test_package\\",ProcessNum=1)
 #' final.out<-bag.summary(method=c("Ensemble"),nNodes=2,path="C:\\Users\\chowds14\\Desktop\\test_package\\")
 #' final.out$score
 #' final.out$imputed_data
 #' }
-bag.summary<-function(method=c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute","Ensemble"),nNodes=2,path=NULL)
+bag.summary<-function(method=c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute","Ensemble"),nNodes=2,path=NULL)
 {
+  load(paste(path,"bag_imputed_",sprintf("%03d",1),".RData",sep=""))
+  out<-bag.output$out.method
+  
+  if(identical(method,intersect(out,method))==FALSE){
+       return(print("method does not match out"))
+  }
+  
   summary.out<-list()
+  
   KNN.out<-list()
   MF.out<-list()
   ADMIN.out<-list()
@@ -26,19 +34,69 @@ bag.summary<-function(method=c("KNN","MissForest","ADMIN","Brinn","SpectroFM","R
   Brinn.out<-list()
   SpectroFM.out<-list()
   Ensemble.out<-list()
+  
   n.bag.out<-list()
+
   for(i in 1:nNodes)
   {
     load(paste(path,"bag_imputed_",sprintf("%03d",i),".RData",sep=""))
     
     summary.out[[i]]<-bag.output$summary
-    KNN.out[[i]]<-bag.output$impute$KNN
-    MF.out[[i]]<-bag.output$impute$MissForest
-    ADMIN.out[[i]]<-bag.output$impute$ADMIN
-    Reg_Impute.out[[i]]<-bag.output$impute$RegImpute
-    Brinn.out[[i]]<-bag.output$impute$Brinn
-    SpectroFM.out[[i]]<-bag.output$impute$SpectroFM
+    
+    if("KNN" %in% method){
+      KNN.out[[i]]<-bag.output$impute$KNN
+    }else{
+      sink("NULL")
+      print("No output for KNN")
+      sink()
+    }
+    
+    if("MissForest" %in% method){
+      MF.out[[i]]<-bag.output$impute$MissForest
+    }else{
+      sink("NULL")
+      print("No output for MissForest")
+      sink()
+      }
+    
+    
+    if("ADMIN" %in% method){
+      ADMIN.out[[i]]<-bag.output$impute$ADMIN
+    }else{
+      sink("NULL")
+      print("No output for ADMIN")
+      sink()
+      }
+
+    if("RegImpute" %in% method){
+      Reg_Impute.out[[i]]<-bag.output$impute$RegImpute
+    }else{
+      sink("NULL")
+      print("No output for RegImpute")
+      sink()
+      }
+    
+    
+    if("Brinn" %in% method){
+      Brinn.out[[i]]<-bag.output$impute$Brinn
+    }else{
+      sink("NULL")
+      print("No output for Brinn")
+      sink()
+      }
+    
+    
+    if("SpectroFM" %in% method){
+      SpectroFM.out[[i]]<-bag.output$impute$SpectroFM
+    }else{
+      sink("NULL")
+      print("No output for SpectroFM")
+      sink()
+      }
+    
+    
     Ensemble.out[[i]]<-bag.output$impute$Ensemble
+    
     n.bag.out[[i]]<-bag.output$n.bag
   }
   
@@ -58,42 +116,106 @@ bag.summary<-function(method=c("KNN","MissForest","ADMIN","Brinn","SpectroFM","R
   summary.score = as.data.frame(summary.score);
   rownames(summary.score) = summary.out.all.agg$gene
   
+  if("KNN" %in% method){
   d.impute.knn<-matrix(0,nrow(KNN.out[[1]]),ncol(KNN.out[[1]]))
-  d.impute.MF<-matrix(0,nrow(KNN.out[[1]]),ncol(MF.out[[1]]))
-  d.impute.ADMIN<-matrix(0,nrow(KNN.out[[1]]),ncol(ADMIN.out[[1]]))
-  d.impute.Brinn<-matrix(0,nrow(KNN.out[[1]]),ncol(Brinn.out[[1]]))
-  d.impute.Reg_Impute<-matrix(0,nrow(Reg_Impute.out[[1]]),ncol(KNN.out[[1]]))
-  d.impute.SpectroFM<-matrix(0,nrow(SpectroFM.out[[1]]),ncol(KNN.out[[1]]))
-  d.impute.Ensemble<-matrix(0,nrow(Ensemble.out[[1]]),ncol(KNN.out[[1]]))
+  }
+  
+  if("MissForest" %in% method){
+  d.impute.MF<-matrix(0,nrow(MF.out[[1]]),ncol(MF.out[[1]]))
+  }
+  
+  if("ADMIN" %in% method){
+  d.impute.ADMIN<-matrix(0,nrow(ADMIN.out[[1]]),ncol(ADMIN.out[[1]]))
+  }
+  
+  if("Brinn" %in% method){
+  d.impute.Brinn<-matrix(0,nrow(Brinn.out[[1]]),ncol(Brinn.out[[1]]))
+  }
+  
+  if("RegImpute" %in% method){
+  d.impute.Reg_Impute<-matrix(0,nrow(Reg_Impute.out[[1]]),ncol(RegImpute.out[[1]]))
+  }
+  
+  if("SpectroFM" %in% method){
+  d.impute.SpectroFM<-matrix(0,nrow(SpectroFM.out[[1]]),ncol(SpectroFM.out[[1]]))
+  }
+  
+  d.impute.Ensemble<-matrix(0,nrow(Ensemble.out[[1]]),ncol(Ensemble.out[[1]]))
   n.bag.tot<-0
   
   for(i in 1:nNodes)
   {
+    if("KNN" %in% method){
     d.impute.knn<-d.impute.knn+n.bag.out[[i]]*KNN.out[[i]]
+    }
+    
+    if("MissForest" %in% method){
     d.impute.MF<-d.impute.MF+n.bag.out[[i]]*MF.out[[i]]
+    }
+    
+    if("ADMIN" %in% method){
     d.impute.ADMIN<-d.impute.ADMIN+n.bag.out[[i]]*ADMIN.out[[i]]
+    }
+    
+    if("Brinn" %in% method){
     d.impute.Brinn<-d.impute.Brinn+n.bag.out[[i]]*Brinn.out[[i]]
+    }
+    
+    if("RegImpute" %in% method){
     d.impute.Reg_Impute<-d.impute.Reg_Impute+n.bag.out[[i]]*Reg_Impute.out[[i]]
+    }
+    
+    if("SpectroFM" %in% method){
     d.impute.SpectroFM<-d.impute.SpectroFM+n.bag.out[[i]]*SpectroFM.out[[i]]
+    }
+    
     d.impute.Ensemble<-d.impute.Ensemble+n.bag.out[[i]]*Ensemble.out[[i]]
     n.bag.tot<-n.bag.tot + n.bag.out[[i]]
   }
   
+  imputed_matrix<-list()
+  
+  if("KNN" %in% method){
   d.impute.knn.final<-d.impute.knn/n.bag.tot
+  imputed_matrix<-c(imputed_matrix,list("KNN"=as.matrix(d.impute.knn.final)))
+  }
+  
+  if("MissForest" %in% method){
   d.impute.MF.final<-d.impute.MF/n.bag.tot
+  imputed_matrix<-c(imputed_matrix,list("MissForest"=as.matrix(d.impute.MF.final)))
+  }
+  
+  if("ADMIN" %in% method){
   d.impute.ADMIN.final<-d.impute.ADMIN/n.bag.tot
+  imputed_matrix<-c(imputed_matrix,list("ADMIN"=as.matrix(d.impute.ADMIN.final)))
+  }
+  
+  if("Brinn" %in% method){
   d.impute.Brinn.final<-d.impute.Brinn/n.bag.tot
+  imputed_matrix<-c(imputed_matrix,list("Brinn"=as.matrix(d.impute.Brinn.final)))
+  }
+  
+  if("RegImpute" %in% method){
   d.impute.RegImpute.final<-d.impute.Reg_Impute/n.bag.tot
+  imputed_matrix<-c(imputed_matrix,list("RegImpute"=as.matrix(d.impute.RegImpute.final)))
+}
+  
+  if("SpectroFM" %in% method){
   d.impute.SpectroFM.final<-d.impute.SpectroFM/n.bag.tot
+  imputed_matrix<-c(imputed_matrix,list("SpectroFM"=as.matrix(d.impute.SpectroFM.final)))
+  }
+  
   d.impute.Ensemble.final<-d.impute.Ensemble/n.bag.tot
+  imputed_matrix<-c(imputed_matrix,list("Ensemble"=as.matrix(d.impute.Ensemble.final)))
   
-  imputed_matrix<-list("KNN"=as.matrix(d.impute.knn.final),"MissForest"=as.matrix(d.impute.MF.final),"ADMIN"=as.matrix(d.impute.ADMIN.final),"Brinn"=as.matrix(d.impute.Brinn.final),"SpectroFM"=as.matrix(d.impute.SpectroFM.final),"RegImpute"=as.matrix(d.impute.RegImpute.final),"Ensemble"=as.matrix(d.impute.Ensemble.final))
+
+  # methods<-c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute")
+  # 
+  # num<-which(methods %in% method)
+  #
+  sink()
   
-  methods<-c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute")
-  
-  num<-which(methods %in% method)
-  
-  output<-imputed_matrix[c(num,7)]
+  output<-imputed_matrix
   
   out<-list(score=summary.score,imputed_data=output)
   return(out)
