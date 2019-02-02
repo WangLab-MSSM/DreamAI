@@ -25,7 +25,7 @@ require("Matrix")
 require("devtools")
 ```
 
-Install DreamAI using the R package "devtools"
+Install DreamAI
 ```
 install_github("WangLab-MSSM/DreamAI/Code")
 ```
