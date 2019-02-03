@@ -48,7 +48,7 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
 | maxiter_MF 	       |	10	            |maximum number of iteration to be performed in the imputation by "MissForest" if the stopping criteria is not met beforehand
 | ntree  		       | 100	           | number of trees to grow in each forest in "MissForest"
 | maxnodes		           | NULL             | maximum number of terminal nodes for trees in the forest in "MissForest", has to equal at least the number of columns in the given data
-| maxiter_ADMIN 	        | 30           | maximum number of iteration to be performed in the imputation by "ADMIN" if the stopping criteria is not met beforehand
+| maxiter_ADMIN 	        | 30          | maximum number of iteration to be performed in the imputation by "ADMIN" if the stopping criteria is not met beforehand
 | tol	         | 10^(-2)             | convergence threshold for "ADMIN"
 | gamma_ADMIN          | NA           | parameter for ADMIN to control abundance dependent missing. Set gamma_ADMIN=0 for log ratio intensity data. For abundance data put gamma_ADMIN=NA, and it will be estimated accordingly
 | gamma       | 50  | parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Brinn
