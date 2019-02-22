@@ -9,7 +9,23 @@ Shrabanti Chowdhury<sup>1</sup>, Weiping Ma<sup>1</sup>, Sunkyu Kim<sup>2</sup>;
 <sup>1</sup>Icahn School of Medicine at Mount Sinai (USA), <sup>2</sup>Department of Computer Science and Engineering, Korea University (South Korea), <sup>3</sup>New York University (USA), <sup>4</sup>Sage Bionetworks (USA), <sup>5</sup>Heidelberg University, Faculty of Biosciences (Germany), <sup>6</sup>RWTH Aachen University (Germany), <sup>7</sup>University of Colorado (USA), <sup>8</sup>Department of Statistics, University of California (USA), <sup>9</sup>Department of Mathematics, Tsinghua University (China), <sup>10</sup>Georgetown University (USA), <sup>11</sup>Pacific Northwest National Laboratory (USA), <sup>12</sup>National Cancer Institute (USA), <sup>13</sup>Ontario Institute of Cancer Research (Canada), <sup>14</sup>IBM Research & Mount Sinai (USA), <sup>15</sup>European Molecular Biology Laboratory-European Bioinformatics Institute (UK)
 
 ## Overview
-......
+
+To develop powerful computational tools to extract the most information from the proteome, Clinical Proteomic Tumor Analysis Consortium (CPTAC) and DREAM organization launched The NCI-CPTAC DREAM Proteogenomics Challenge in 2016, one of the subchallange: impute missing values in proteomics data given observed proteins.
+
+In this challenge, participants were invited to develop proper imputation algorithms for proteomics data. And with their help an optimal imputation method: DreamAI was ensembled as an outcome of this challenge.
+
+Specifically in DreamAI, ensemble imputation matrix is obtained from averaging results of six imputation algorithms: top 3 teams in challenge (spectroFM: Team DMIS_PTG; RegImpute: Team Jeremy Jacobsen; Birnn: Team BruinGo) and 3 baseline algorithms (KNN, missForest, ADMIN). Bootstrap aggregating (bagging) is also adopted to improve unstable estimation and accuracy of machine learning algorithms.
+
+In the output option of this function, it provides user the flexibility to select imputation matrix from the ensemble method or each individual algorithm:
+ - "KNN": k nearest neighbor imputation
+ - "MissForest": nonparametric Missing Value Imputation using Random Forest 
+  - "ADMIN": abundance dependent missing imputation
+   - "Brinn": imputation using IRNN-SCAD algorithm 
+   - "SpectroFM": imputation using matrix factorization 
+   -  "RegImpute": imputation using Glmnet ridge regression  
+   -  "Ensemble": average of the 6 methods
+
+
 
 ## Installation
 
