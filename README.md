@@ -2,6 +2,7 @@
 - [Authors](#authors)
 - [Overview](#Overview)
 - [Installation](#installation)
+- [Contributions](#contributions)
 
 ## Authors
 Shrabanti Chowdhury<sup>1</sup>, Weiping Ma<sup>1</sup>, Sunkyu Kim<sup>2</sup>; Zhi Li<sup>3</sup>, Thomas Yu<sup>4</sup>, Mi Yang<sup>5,6</sup>, Francesca Petralia<sup>1</sup>, Jeremy Jacobsen<sup>7</sup>, Jingyi Jessica Li<sup>8</sup>, Xinzhou Ge<sup>8</sup>, Kexin Li<sup>9</sup>, Nathan Edwards<sup>10</sup>, Samuel Payne<sup>11</sup>, Henry Rodriguez<sup>12</sup>, Paul Boutros<sup>13</sup>, Gustavo Stolovitzky<sup>14</sup>, Jaewoo Kang<sup>2</sup>, David Fenyo<sup>3</sup>, Julio Saez-Rodriguez,<sup>6,15</sup>, Pei Wang<sup>1</sup>
@@ -48,3 +49,7 @@ Install DreamAI
 ```
 install_github("WangLab-MSSM/DreamAI/Code")
 ```
+
+### Contributions
+
+If you find small bugs, larger issues, or have suggestions, please email the maintainer at <shrabanti.chowdhury@mssm.edu> or <weiping.ma@mssm.edu>. Contributions (via pull requests or otherwise) are welcome.
