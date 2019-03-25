@@ -43,6 +43,10 @@ require("itertools")
 require("iterators")
 require("Matrix")
 require("devtools")
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+BiocManager::install("impute", version = "3.8")
+library(impute)
 ```
 
 Install DreamAI
