@@ -63,7 +63,7 @@ impute.KNN = function(data,k)
   median.new = norm.temp[[2]];
   sd.new = norm.temp[[3]];
 
-  impu.temp = pamr.knnimpute(list(x = data.new,y = rep(1,dim(data)[2])),k,rowmax = 0.9,colmax = 0.9);
+  impu.temp = impute.knn(data.new,k,rowmax = 0.9,colmax = 0.9,maxp=dim(data)[1]);
 
   X1b.new = my.normlize.rev((impu.temp[[1]]), median.new, sd.new);
   # X1b.new[X1b.new<0] = 0;
@@ -137,7 +137,7 @@ impute.ADMIN = function(data,data.ini=NA,gamma, k, maxiter_ADMIN,tol)
   M.t = data.ini;
   if(sum(is.na(data.ini))>0){
     set.seed(1234);
-    fit.0 = pamr.knnimpute(list(x = data,y = rep(1,dim(data)[2])),k=5,rowmax = 0.9,colmax = 0.9)[[1]];
+    fit.0 = impute.knn(data,k=5,rowmax = 0.9,colmax = 0.9,maxp=dim(data)[1])[[1]];
     M.t = fit.0;
   }
 

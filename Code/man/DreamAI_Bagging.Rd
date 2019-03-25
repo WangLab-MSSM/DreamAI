@@ -9,8 +9,9 @@ DreamAI_Bagging(data, k = 10, maxiter_MF = 10, ntree = 100,
   gamma_ADMIN = NA, gamma = 50, CV = FALSE,
   fillmethod = "row_mean", maxiter_RegImpute = 10,
   conv_nrmse = 1e-06, iter_SpectroFM = 40, method = c("KNN",
-  "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute", "Ensemble"),
-  SamplesPerBatch, n.bag, save.out = TRUE, path = NULL, ProcessNum)
+  "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),
+  out = c("Ensemble"), SamplesPerBatch, n.bag, save.out = TRUE,
+  path = NULL, ProcessNum)
 }
 \arguments{
 \item{data}{dataset in the form of a matrix or dataframe with missing values or NA's. The function throws an error message and stops if any row or column in the dataset is missing all values}
@@ -41,19 +42,22 @@ DreamAI_Bagging(data, k = 10, maxiter_MF = 10, ntree = 100,
 
 \item{iter_SpectroFM}{number of iterations for "SpectroFM"}
 
-\item{method}{a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble"). Default is "Ensemble" if nothing is specified}
+\item{method}{a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute") based on which "Ensemble" imputed matrix will be obtained}
+
+\item{out}{a vector of imputation methods for which the function will output the imputed matrices. Default is "Ensemble".}
 
 \item{SamplesPerBatch}{number of samples per batch (batch size in the original data)}
 
-\item{n.bag}{number of pseudo datasets to generate and impute in the current process
-save.out logical indicator whether or not to save the output. When TRUE output is saved, when FALSE output is returned}
+\item{n.bag}{number of pseudo datasets to generate and impute in the current process}
+
+\item{save.out}{logical indicator whether or not to save the output. When TRUE output is saved, when FALSE output is only returned}
 
 \item{path}{location to save the output file from the curent process.  Path only needs to be specified when save.out=TRUE}
 
 \item{ProcessNum}{process number starting from 1 when run in cluster, e.g. 1 - 10, 1 - 100 etc. Needs to be specified only if the output is saved}
 }
 \value{
-list of imputed dataset, n.bag and a matrix containing gene name, sample name, true and imputed values of every pseudo missing combined from n.bag datasets. Impute is a list of imputed datasets (average over all pseudo imputed data matrices) by different methods as specified by the user. Always returns imputed data by "Ensemble"
+list of imputed dataset(average over all pseudo imputed data matrices) by different methods as specified by the user, n.bag and a matrix containing gene name, sample name, true and imputed values of every pseudo missing combined from n.bag datasets
 }
 \description{
 The function DreamAI_bagging imputes a dataset with missing values or NA's by bag imputaion with help of parallel processing. Pseudo datasets are generated having true missing (as in the original dataset) and pseudo missing and every such pseudo dataset is imputed by 7 different methods: KNN, MissForest, ADMIN, Brinn, SpectroFM, RegImpute and Ensemble (descriptions are included in the documentation of the function DreamAI).
@@ -65,7 +69,7 @@ This function can be run as parallel job in cluster. It generates and saves a .R
 \dontrun{
 data(datapnnl)
 data<-datapnnl.rm.ref[1:100,1:21]
-impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute","Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\\\Users\\\\chowds14\\\\Desktop\\\\test_package\\\\",ProcessNum=1)
+impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method = c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\\\Users\\\\chowds14\\\\Desktop\\\\test_package\\\\",ProcessNum=1)
 impute$Ensemble
 }
 }
