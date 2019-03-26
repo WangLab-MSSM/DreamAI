@@ -32,7 +32,6 @@ In the output option of this function, it provides user the flexibility to selec
 
 Packages required prior to installing DreamAI
 ```
-require("pamr")
 require("cluster")
 require("survival")
 require("randomForest")
@@ -46,7 +45,6 @@ require("devtools")
 if (!requireNamespace("BiocManager", quietly = TRUE))
 install.packages("BiocManager")
 BiocManager::install("impute", version = "3.8")
-library(impute)
 ```
 
 Install DreamAI
