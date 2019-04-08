@@ -2,6 +2,11 @@
 - [Authors](#authors)
 - [Overview](#Overview)
 - [Installation](#installation)
+- [Usage](#Usage)
+- [Arguments](#Arguments)
+- [Value](#Value)
+- [Note](#Note)
+- [Examples](#Examples)
 - [Contributions](#contributions)
 
 ## Authors
@@ -101,6 +106,6 @@ impute<- DreamAI(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_
 impute$Ensemble
 ```
 
-### Contributions
+## Contributions
 
 If you find small bugs, larger issues, or have suggestions, please email the maintainer at <shrabanti.chowdhury@mssm.edu> or <weiping.ma@mssm.edu>. Contributions (via pull requests or otherwise) are welcome.
