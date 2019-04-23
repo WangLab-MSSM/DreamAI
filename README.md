@@ -16,7 +16,7 @@ Shrabanti Chowdhury<sup>1</sup>, Weiping Ma<sup>1</sup>, Sunkyu Kim<sup>2</sup>;
 
 ## Overview
 
-To develop powerful computational tools to extract the most information from the proteome, Clinical Proteomic Tumor Analysis Consortium (CPTAC) and DREAM organization launched The NCI-CPTAC DREAM Proteogenomics Challenge in 2016, one of the subchallange: impute missing values in proteomics data given observed proteins.
+To develop powerful computational tools to extract the most information from the proteome, Clinical Proteomic Tumor Analysis Consortium (CPTAC) and DREAM organization launched The NCI-CPTAC DREAM Proteogenomics Challenge in 2016, one of the subchallenges: impute missing values in proteomics data given observed proteins.
 
 In this challenge, participants were invited to develop proper imputation algorithms for proteomics data. And with their help an optimal imputation method: DreamAI was ensembled as an outcome of this challenge.
 
