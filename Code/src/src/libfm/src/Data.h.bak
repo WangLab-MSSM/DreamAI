@@ -35,7 +35,6 @@ class DataMetaInfo {
   DataMetaInfo(uint num_attributes);
 
   void loadGroupsFromFile(std::string filename);
-  void loadGroupsFromVector(std::vector<std::string> vmeta);
 
   void debug();
 
@@ -50,8 +49,7 @@ class DataMetaInfo {
 class Data {
  public:
   Data(uint64 cache_size, bool has_x, bool has_xt);
-  //void load(std::string filename);
-  void load(std::vector<std::string> vstr);
+  void load(std::string filename);
   void debug();
 
   LargeSparseMatrix<DATA_FLOAT>* data_t;
@@ -87,8 +85,6 @@ void DataMetaInfo::loadGroupsFromFile(std::string filename) {
   assert(fileexists(filename));
   attr_group.load(filename);
   num_attr_groups = 0;
-  
-  std::vector<uint>::iterator iter;
   for (uint i = 0; i < attr_group.dim; i++) {
     num_attr_groups = std::max(num_attr_groups, attr_group(i)+1);
   }
@@ -98,23 +94,6 @@ void DataMetaInfo::loadGroupsFromFile(std::string filename) {
     num_attr_per_group(attr_group(i))++;
   }
 }
-
-void DataMetaInfo::loadGroupsFromVector(std::vector<std::string> vmeta) {
-  num_attr_groups = 0;
-  
-  std::vector<std::string>::iterator iter;
-  for (iter=vmeta.begin(); iter<vmeta.end(); iter++) {
-  //for (uint i = 0; i < attr_group.dim; i++) {
-    num_attr_groups = std::max(num_attr_groups, uint(atoi((*iter).c_str()))+1);
-  }
-  num_attr_per_group.setSize(num_attr_groups);
-  num_attr_per_group.init(0);
-  for (iter=vmeta.begin(); iter<vmeta.end(); iter++) {
-  //for (uint i = 0; i < attr_group.dim; i++) {
-    num_attr_per_group(uint(atoi((*iter).c_str())))++;
-  }
-}
-
 
 void DataMetaInfo::debug() {
   std::cout << "#attr=" << attr_group.dim << "\t#groups=" << num_attr_groups << std::endl;
@@ -131,15 +110,13 @@ Data::Data(uint64 cache_size, bool has_x, bool has_xt) {
   this->has_xt = has_xt;
 }
 
-//void Data::load(std::string filename) {
-void Data::load(std::vector<std::string> vstr) {
+void Data::load(std::string filename) {
 
   std::cout << "has x = " << has_x << std::endl;
   std::cout << "has xt = " << has_xt << std::endl;
   assert(has_x || has_xt);
 
   int load_from = 0;
-  std::string filename = "off_function";
   if ((! has_x || fileexists(filename + ".data")) && (! has_xt || fileexists(filename + ".datat")) && fileexists(filename + ".target")) {
     load_from = 1;
   } else if ((! has_x || fileexists(filename + ".x")) && (! has_xt || fileexists(filename + ".xt")) && fileexists(filename + ".y")) {
@@ -213,17 +190,15 @@ void Data::load(std::vector<std::string> vstr) {
 
   // (1) determine the number of rows and the maximum feature_id
   {
-    //std::ifstream fData(filename.c_str());
-    //if (! fData.is_open()) {
-    //  throw "unable to open " + filename;
-    //}
+    std::ifstream fData(filename.c_str());
+    if (! fData.is_open()) {
+      throw "unable to open " + filename;
+    }
     DATA_FLOAT _value;
     int nchar, _feature;
-    //while (!fData.eof()) {    
-    std::vector<std::string>::iterator iter;
-    for(iter=vstr.begin(); iter!=vstr.end(); iter++){
-      std::string line = *iter;
-      //std::getline(fData, line);
+    while (!fData.eof()) {
+      std::string line;
+      std::getline(fData, line);
       const char *pline = line.c_str();
       while ((*pline == ' ')  || (*pline == 9)) { pline++; } // skip leading spaces
       if ((*pline == 0)  || (*pline == '#')) { continue; }  // skip empty rows
@@ -246,7 +221,7 @@ void Data::load(std::vector<std::string> vstr) {
         throw "cannot parse line \"" + line + "\" at character " + pline[0];
       }
     }
-    //fData.close();
+    fData.close();
   }
 
   if (has_feature) {
@@ -264,19 +239,17 @@ void Data::load(std::vector<std::string> vstr) {
 
   // (2) read the data
   {
-    //std::ifstream fData(filename.c_str());
-    //if (! fData.is_open()) {
-    //  throw "unable to open " + filename;
-    //}
+    std::ifstream fData(filename.c_str());
+    if (! fData.is_open()) {
+      throw "unable to open " + filename;
+    }
     int row_id = 0;
     uint64 cache_id = 0;
     DATA_FLOAT _value;
     int nchar, _feature;
-    //while (!fData.eof()) {
-    std::vector<std::string>::iterator iter;
-    for(iter=vstr.begin(); iter!=vstr.end(); iter++){
-      std::string line = *iter;
-      //std::getline(fData, line);
+    while (!fData.eof()) {
+      std::string line;
+      std::getline(fData, line);
       const char *pline = line.c_str();
       while ((*pline == ' ')  || (*pline == 9)) { pline++; } // skip leading spaces
       if ((*pline == 0)  || (*pline == '#')) { continue; }  // skip empty rows
@@ -305,7 +278,7 @@ void Data::load(std::vector<std::string> vstr) {
         throw "cannot parse line \"" + line + "\" at character " + pline[0];
       }
     }
-    //fData.close();
+    fData.close();
 
     assert(num_rows == row_id);
     assert(num_values == cache_id);

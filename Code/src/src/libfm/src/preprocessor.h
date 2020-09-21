@@ -29,15 +29,13 @@ vector<vector<string> > PrePostProcessor::preprocessor2(vector<string> data_tabl
     vector<string> vmeta;
 	string::size_type sz;
 	int row, col;
-	// int pos_first_tab, pos1, pos2;
-  std::string::size_type pos_first_tab, pos1, pos2;
+	int pos_first_tab, pos1, pos2;
 	string item;	
 	// from second line
 	str = data_table[0];
 	obs_lines.push_back(str);
 
 	row = 0;
-  col = total_line;
 	//while(getline(infile, str)) {
 	for(int data_i=1; data_i<total_line; data_i++) {
 	  str = data_table[data_i];
@@ -46,7 +44,7 @@ vector<vector<string> > PrePostProcessor::preprocessor2(vector<string> data_tabl
 
 		pos1 = pos_first_tab+1;
 		col = total_line;
-		while((pos2 = str.find("\t", pos1)) != string::npos) {
+		while((pos2 = str.find("\t", pos1))!= string::npos) {
 			item = str.substr(pos1, pos2-pos1);
 			try {
 				stof(item, &sz);
@@ -122,14 +120,13 @@ vector<vector<string> > PrePostProcessor::preprocessor(string filepath) {
   vector<string> vmeta;
   string::size_type sz;
   int row, col;
-  std::string::size_type pos_first_tab, pos1, pos2;
+  int pos_first_tab, pos1, pos2;
   string item;	
   // from second line
   getline(infile, str);
   obs_lines.push_back(str);
   
   row = 0;
-  col = total_line;
   while(getline(infile, str)) {
     obs_lines.push_back(str);
     pos_first_tab = str.find("\t");
@@ -192,13 +189,12 @@ vector<string> PrePostProcessor::postprocessor(vector<double> vpred) {
     vector<string> ret; 
 	string::size_type sz;
 	int row, col;
-	std::string::size_type pos_first_tab, pos1, pos2;
+	int pos_first_tab, pos1, pos2;
 	string item;	
 
 
 	int pred_index = 0;
-    // int i;
-    std::string::size_type i;
+    int i;
     string header = obs_lines[0];
     ret.push_back(header);
 

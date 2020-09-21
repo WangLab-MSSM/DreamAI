@@ -5,12 +5,10 @@
 \title{Imputation of Missing Protein Abundances with Iterative Prediction Model}
 \usage{
 DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
-  maxnodes = NULL, maxiter_ADMIN = 30, tol = 10^(-2),
-  gamma_ADMIN = NA, gamma = 50, CV = FALSE,
-  fillmethod = "row_mean", maxiter_RegImpute = 10,
+  maxnodes = NULL, maxiter_ADMIN = 30, tol = 10^(-2), gamma = 50,
+  CV = FALSE, fillmethod = "row_mean", maxiter_RegImpute = 10,
   conv_nrmse = 1e-06, iter_SpectroFM = 40, method = c("KNN",
-  "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),
-  out = c("Ensemble"))
+  "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute", "Ensemble"))
 }
 \arguments{
 \item{data}{dataset in the form of a matrix or dataframe with missing values or NA's. The function throws an error message and stops if any row or column in the dataset is missing all values}
@@ -27,8 +25,6 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
 
 \item{tol}{convergence threshold for "ADMIN"}
 
-\item{gamma_ADMIN}{parameter for ADMIN to control abundance dependent missing. Set gamma_ADMIN=0 for log ratio intensity data. For abundance data put gamma_ADMIN=NA, and it will be estimated accordingly}
-
 \item{gamma}{parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Brinn}
 
 \item{CV}{a logical value indicating whether to fit the best gamma with cross validation for "Brinn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.}
@@ -37,28 +33,22 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
 
 \item{maxiter_RegImpute}{maximum number of iterations to reach convergence in the imputation by "RegImpute"}
 
-\item{conv_nrmse}{convergence threshold for "RegImpute"}
+\item{conv_nrmse}{convergence threshold for "RegImpute"
+#' @param iter_SpectroFM number of iterations for "SpectroFM"}
 
-\item{iter_SpectroFM}{number of iterations for "SpectroFM"}
-
-\item{method}{a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute") based on which "Ensemble" imputed matrix will be obtained.}
-
-\item{out}{a vector of imputation methods for which the function will output the imputed matrices. Default is "Ensemble".}
+\item{method}{a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble"). Default is "Ensemble" if nothing is specified}
 }
 \value{
-a list of imputed datasets by different methods as specified by the user. Always returns imputed data by "Ensemble"
+a list of imputed versions of the dataset by different methods as specified by the user. Always returns imputed data by "Ensemble".
 }
 \description{
 The function DreamAI imputes a dataset with missing values or NA's using 7 different methods: "KNN": k nearest neighbor, "MissForest": nonparametric Missing Value Imputation using Random Forest, "ADMIN": abundance dependent missing imputation, "Brinn": imputation using IRNN-SCAD algorithm, "SpectroFM": imputation using matrix factorization, "RegImpute": imputation using Glmnet ridge regression and "Ensemble": aggregation of the 6 methods using simple average.
-}
-\note{
-If all methods are specified for obtaining "Ensemble" imputed matrix, the approximate time required to output the imputed matrix for a dataset of dimension 26000 x 200 is ~50 hours.
 }
 \examples{
 \dontrun{
 data(datapnnl)
 data<-datapnnl.rm.ref[1:100,1:21]
-impute<- DreamAI(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40, method = c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),out="Ensemble")
+impute<- DreamAI(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40, method = c("Ensemble"))
 impute$Ensemble
 }
 }

@@ -4,7 +4,7 @@
 \alias{impute.ADMIN}
 \title{Imputation of Missing Protein Abundances using ADMIN (Abundance  Dependent  Missing Imputation Mechanism)}
 \usage{
-impute.ADMIN(data, data.ini = NA, gamma, k, maxiter_ADMIN, tol)
+impute.ADMIN(data, data.ini = NA, gamma = NA, k, maxiter_ADMIN, tol)
 }
 \arguments{
 \item{data}{dataset in the form of a matrix or data frame with either NAs or 0s as missings}

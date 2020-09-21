@@ -81,7 +81,15 @@ SEXP do_libfm(StringVector rcpp_data_table, StringVector arg_strs) {
     //std::cout << argc << std::endl;
     //std::cout << argv << std::endl; 
     CMDLine cmdline(argc, argv);
-    
+    std::cout << "----------------------------------------------------------------------------" << std::endl;
+    std::cout << "libFM" << std::endl;
+    std::cout << "  Version: 1.4.4" << std::endl;
+    std::cout << "  Author:  Steffen Rendle, srendle@libfm.org" << std::endl;
+    std::cout << "  WWW:     http://www.libfm.org/" << std::endl;
+    std::cout << "This program comes with ABSOLUTELY NO WARRANTY; for details see license.txt." << std::endl;
+    std::cout << "This is free software, and you are welcome to redistribute it under certain" << std::endl;
+    std::cout << "conditions; for details see license.txt." << std::endl;
+    std::cout << "----------------------------------------------------------------------------" << std::endl;
 
     const std::string param_task       = cmdline.registerParameter("task", "r=regression, c=binary classification [MANDATORY]");
     const std::string param_meta_file  = cmdline.registerParameter("meta", "filename for meta information about data set");
@@ -115,27 +123,12 @@ SEXP do_libfm(StringVector rcpp_data_table, StringVector arg_strs) {
     const std::string param_do_multilevel  = "do_multilevel";
     const std::string param_num_eval_cases  = "num_eval_cases";
 
-    const std::string param_verbose  = cmdline.registerParameter("verbose", "print outputs in R");
-    if(cmdline.getValue(param_verbose).compare("0") == 0) {
-        std::cout.setstate(std::ios_base::failbit);
-    }
-
     if (cmdline.hasParameter(param_help) || (argc == 1)) {
       cmdline.print_help();
       //return 0;
       return R_NilValue;
     }
     cmdline.checkParameters();
-
-    std::cout << "----------------------------------------------------------------------------" << std::endl;
-    std::cout << "libFM" << std::endl;
-    std::cout << "  Version: 1.4.4" << std::endl;
-    std::cout << "  Author:  Steffen Rendle, srendle@libfm.org" << std::endl;
-    std::cout << "  WWW:     http://www.libfm.org/" << std::endl;
-    std::cout << "This program comes with ABSOLUTELY NO WARRANTY; for details see license.txt." << std::endl;
-    std::cout << "This is free software, and you are welcome to redistribute it under certain" << std::endl;
-    std::cout << "conditions; for details see license.txt." << std::endl;
-    std::cout << "----------------------------------------------------------------------------" << std::endl;
 
     // Seed
     long int seed = cmdline.getValue(param_seed, static_cast<long int>(time(NULL)));
@@ -467,7 +460,7 @@ SEXP do_libfm(StringVector rcpp_data_table, StringVector arg_strs) {
     pred.setSize(test.num_cases);
     fml->predict(test, pred);
     
-    unsigned int i;
+    int i;
     
     vector<double> d_pred;
     for(i=0; i<pred.dim; i++) {
@@ -489,25 +482,22 @@ SEXP do_libfm(StringVector rcpp_data_table, StringVector arg_strs) {
     
     
     // () Save prediction
-    // if (cmdline.hasParameter(param_out)) {
-    //   DVector<double> pred;
-    //   pred.setSize(test.num_cases);
-    //   fml->predict(test, pred);
-    //   pred.save(cmdline.getValue(param_out));
-    // }
+    if (cmdline.hasParameter(param_out)) {
+      DVector<double> pred;
+      pred.setSize(test.num_cases);
+      fml->predict(test, pred);
+      pred.save(cmdline.getValue(param_out));
+    }
 
-    // // () save the FM model
-    // if (cmdline.hasParameter(param_save_model)) {
-    //   std::cout << "Writing FM model to "<< cmdline.getValue(param_save_model) << std::endl;
-    //   fm.saveModel(cmdline.getValue(param_save_model));
-    // }
+    // () save the FM model
+    if (cmdline.hasParameter(param_save_model)) {
+      std::cout << "Writing FM model to "<< cmdline.getValue(param_save_model) << std::endl;
+      fm.saveModel(cmdline.getValue(param_save_model));
+    }
 
   } catch (std::string &e) {
     std::cerr << std::endl << "ERROR: " << e << std::endl;
   } catch (char const* &e) {
     std::cerr << std::endl << "ERROR: " << e << std::endl;
   }
-
-  return 0;
-
 }
