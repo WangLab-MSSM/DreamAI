@@ -8,7 +8,7 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
   maxnodes = NULL, maxiter_ADMIN = 30, tol = 10^(-2), gamma = 50,
   CV = FALSE, fillmethod = "row_mean", maxiter_RegImpute = 10,
   conv_nrmse = 1e-06, iter_SpectroFM = 40, method = c("KNN",
-  "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute", "Ensemble"))
+  "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute", "Ensemble"))
 }
 \arguments{
 \item{data}{dataset in the form of a matrix or dataframe with missing values or NA's. The function throws an error message and stops if any row or column in the dataset is missing all values}
@@ -25,9 +25,9 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
 
 \item{tol}{convergence threshold for "ADMIN"}
 
-\item{gamma}{parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Brinn}
+\item{gamma}{parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Birnn}
 
-\item{CV}{a logical value indicating whether to fit the best gamma with cross validation for "Brinn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.}
+\item{CV}{a logical value indicating whether to fit the best gamma with cross validation for "Birnn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.}
 
 \item{fillmethod}{a string identifying the method to be used to initially filling the missing values using simple imputation for "RegImpute". That could be "row_mean" or "zeros", with "row_mean" being the default. It throws an warning if "row_median" is used.}
 
@@ -36,13 +36,13 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
 \item{conv_nrmse}{convergence threshold for "RegImpute"
 #' @param iter_SpectroFM number of iterations for "SpectroFM"}
 
-\item{method}{a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble"). Default is "Ensemble" if nothing is specified}
+\item{method}{a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM, "RegImpute", "Ensemble"). Default is "Ensemble" if nothing is specified}
 }
 \value{
 a list of imputed versions of the dataset by different methods as specified by the user. Always returns imputed data by "Ensemble".
 }
 \description{
-The function DreamAI imputes a dataset with missing values or NA's using 7 different methods: "KNN": k nearest neighbor, "MissForest": nonparametric Missing Value Imputation using Random Forest, "ADMIN": abundance dependent missing imputation, "Brinn": imputation using IRNN-SCAD algorithm, "SpectroFM": imputation using matrix factorization, "RegImpute": imputation using Glmnet ridge regression and "Ensemble": aggregation of the 6 methods using simple average.
+The function DreamAI imputes a dataset with missing values or NA's using 7 different methods: "KNN": k nearest neighbor, "MissForest": nonparametric Missing Value Imputation using Random Forest, "ADMIN": abundance dependent missing imputation, "Birnn": imputation using IRNN-SCAD algorithm, "SpectroFM": imputation using matrix factorization, "RegImpute": imputation using Glmnet ridge regression and "Ensemble": aggregation of the 6 methods using simple average.
 }
 \examples{
 \dontrun{
