@@ -26,7 +26,7 @@ In the output option of this function, it provides user the flexibility to selec
  - "KNN": k nearest neighbor imputation
  - "MissForest": nonparametric Missing Value Imputation using Random Forest 
   - "ADMIN": abundance dependent missing imputation
-   - "Brinn": imputation using IRNN-SCAD algorithm 
+   - "Birnn": imputation using IRNN-SCAD algorithm 
    - "SpectroFM": imputation using matrix factorization 
    -  "RegImpute": imputation using Glmnet ridge regression  
    -  "Ensemble": average of the 6 methods
@@ -68,7 +68,7 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
   gamma_ADMIN = NA, gamma = 50, CV = FALSE,
   fillmethod = "row_mean", maxiter_RegImpute = 10,
   conv_nrmse = 1e-06, iter_SpectroFM = 40, method = c("KNN",
-  "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),
+  "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),
   out = c("Ensemble"))
 ```
 ## Arguments
@@ -83,13 +83,13 @@ DreamAI(data, k = 10, maxiter_MF = 10, ntree = 100,
 | maxiter_ADMIN 	        | 30           | maximum number of iteration to be performed in the imputation by "ADMIN" if the stopping criteria is not met beforehand
 | tol	         | 10^(-2)             | convergence threshold for "ADMIN"
 | gamma_ADMIN          | NA           | parameter for ADMIN to control abundance dependent missing. Set gamma_ADMIN=0 for log ratio intensity data. For abundance data put gamma_ADMIN=NA, and it will be estimated accordingly
-| gamma       | 50  | parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Brinn
-| CV   | FALSE         | a logical value indicating whether to fit the best gamma with cross validation for "Brinn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.
+| gamma       | 50  | parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Birnn
+| CV   | FALSE         | a logical value indicating whether to fit the best gamma with cross validation for "Birnn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.
 | fillmethod			             | "row_mean" 	           | a string identifying the method to be used to initially filling the missing values using simple imputation for "RegImpute". That could be "row_mean" or "zeros", with "row_mean" being the default. It throws an warning if "row_median" is used.
 | maxiter_RegImpute			     | 10         | maximum number of iterations to reach convergence in the imputation by "RegImpute"
 | conv_nrmse			             | 1e-06     	     | convergence threshold for "RegImpute"
 | iter_SpectroFM		    | 40     	     | number of iterations for "SpectroFM"
-| method		      | c("KNN","MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute", "Ensemble")     	   | a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble"). Default is "Ensemble" if nothing is specified
+| method		      | c("KNN","MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute", "Ensemble")     	   | a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM, "RegImpute", "Ensemble"). Default is "Ensemble" if nothing is specified
 | out		      | c("Ensemble")     	   | a vector of imputation methods for which the function will output the imputed matrices
 
 	
@@ -103,7 +103,7 @@ If all methods are specified for obtaining "Ensemble" imputed matrix, the approx
 ```
 data(datapnnl)
 data<-datapnnl.rm.ref[1:100,1:21]
-impute<- DreamAI(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40, method = c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),out="Ensemble")
+impute<- DreamAI(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40, method = c("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),out="Ensemble")
 impute$Ensemble
 ```
 
