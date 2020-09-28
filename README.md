@@ -57,6 +57,7 @@ require("impute")
 
 Install DreamAI
 ```
+require("remotes")
 install_github("WangLab-MSSM/DreamAI/Code")
 ```
 
