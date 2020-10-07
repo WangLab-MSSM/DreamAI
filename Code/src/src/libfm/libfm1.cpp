@@ -467,7 +467,7 @@ SEXP do_libfm(StringVector rcpp_data_table, StringVector arg_strs) {
     pred.setSize(test.num_cases);
     fml->predict(test, pred);
     
-    unsigned int i;
+    int i;
     
     vector<double> d_pred;
     for(i=0; i<pred.dim; i++) {
@@ -489,25 +489,22 @@ SEXP do_libfm(StringVector rcpp_data_table, StringVector arg_strs) {
     
     
     // () Save prediction
-    // if (cmdline.hasParameter(param_out)) {
-    //   DVector<double> pred;
-    //   pred.setSize(test.num_cases);
-    //   fml->predict(test, pred);
-    //   pred.save(cmdline.getValue(param_out));
-    // }
+    if (cmdline.hasParameter(param_out)) {
+      DVector<double> pred;
+      pred.setSize(test.num_cases);
+      fml->predict(test, pred);
+      pred.save(cmdline.getValue(param_out));
+    }
 
-    // // () save the FM model
-    // if (cmdline.hasParameter(param_save_model)) {
-    //   std::cout << "Writing FM model to "<< cmdline.getValue(param_save_model) << std::endl;
-    //   fm.saveModel(cmdline.getValue(param_save_model));
-    // }
+    // () save the FM model
+    if (cmdline.hasParameter(param_save_model)) {
+      std::cout << "Writing FM model to "<< cmdline.getValue(param_save_model) << std::endl;
+      fm.saveModel(cmdline.getValue(param_save_model));
+    }
 
   } catch (std::string &e) {
     std::cerr << std::endl << "ERROR: " << e << std::endl;
   } catch (char const* &e) {
     std::cerr << std::endl << "ERROR: " << e << std::endl;
   }
-
-  return 0;
-
 }

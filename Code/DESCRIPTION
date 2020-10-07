@@ -1,14 +1,18 @@
 Package: DreamAI
 Type: Package
-Title: Imputation missing values of a matrix or data.frame using iterative prediction  model
+Title: Imputation of missing values of a matrix or data.frame using iterative prediction model
 Version: 0.1.0
-Author: Weiping Ma <weiping.ma@mssm.edu>
-Maintainer: Shrabanti Chowdhury <shrabanti.chowdhury@mssm.edu>
+Author: Shrabanti Chowdhury, Weiping Ma, Sunkyu Kim,  Zhi Li, Thomas Yu, Mi Yang, Francesca Petralia, Jeremy Jacobsen, Jingyi Jessica Li, Xinzhou Ge, Kexin Li, Nathan Edwards, Samuel Payne, Henry Rodriguez, Paul Boutros, Gustavo Stolovitzky, Jaewoo Kang, David Fenyo, Julio Saez-Rodriguez, Pei Wang
+Maintainer: Shrabanti Chowdhury <shrabanti.chowdhury@mssm.edu> and Weiping Ma <weiping.ma@mssm.edu>
 Description: The function imputes the missing protein abundances in a protein-sample matrix using 6 methods and the ensemble method. The six methods include K-nearest neighbor (KNN), MissForest, Abundance Dependent Batch Level Missing (ADMIN),Iteratively Reweighted Nuclear Norm (IRNN) algorithm with SCAD penalty (Brinn), Matrix factorization algorithm to obtain latent parameters of proteins and samples with MCMC algorithm used for the optimization (SpectroFM) and a flexible, iterative, regression based imputation approach (RegImpute). 
 License: GPL (>= 2)
-Depends: R (>= 2.1.0), pamr, missForest, glmnet
-Imports: Rcpp (>= 0.12.17)
+Depends: R (>= 2.1.0), cluster, survival, randomForest, missForest, glmnet, foreach, itertools, iterators, Matrix
+biocViews:
+Imports: Rcpp (>= 0.12.15)
 LinkingTo: Rcpp
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
+NeedsCompilation: yes
+Packaged: 2019-03-25 19:32:09 UTC; chowds14
+

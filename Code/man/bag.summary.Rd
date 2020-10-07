@@ -4,11 +4,11 @@
 \alias{bag.summary}
 \title{Wrapper function for summarizing the outputs from DreamAI_bagging}
 \usage{
-bag.summary(method = c("KNN", "MissForest", "ADMIN", "Birnn",
+bag.summary(method = c("KNN", "MissForest", "ADMIN", "Brinn",
   "SpectroFM", "RegImpute", "Ensemble"), nNodes = 2, path = NULL)
 }
 \arguments{
-\item{method}{a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM, "RegImpute", "Ensemble"). This vector should be a subset or equal to the vector out in DreamAI_bagging.}
+\item{method}{a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble"). This vector should be a subset or equal to the vector out in DreamAI_bagging.}
 
 \item{nNodes}{number of parallel processes}
 
@@ -24,7 +24,7 @@ Wrapper function for summarizing the outputs from DreamAI_bagging
 \dontrun{
 data(datapnnl)
 data<-datapnnl.rm.ref[1:100,1:21]
-impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Birnn","SpectroFM","RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\\\Users\\\\chowds14\\\\Desktop\\\\test_package\\\\",ProcessNum=1)
+impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\\\Users\\\\chowds14\\\\Desktop\\\\test_package\\\\",ProcessNum=1)
 final.out<-bag.summary(method=c("Ensemble"),nNodes=2,path="C:\\\\Users\\\\chowds14\\\\Desktop\\\\test_package\\\\")
 final.out$score
 final.out$imputed_data

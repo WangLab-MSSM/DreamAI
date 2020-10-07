@@ -9,7 +9,7 @@ DreamAI_Bagging(data, k = 10, maxiter_MF = 10, ntree = 100,
   gamma_ADMIN = NA, gamma = 50, CV = FALSE,
   fillmethod = "row_mean", maxiter_RegImpute = 10,
   conv_nrmse = 1e-06, iter_SpectroFM = 40, method = c("KNN",
-  "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),
+  "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),
   out = c("Ensemble"), SamplesPerBatch, n.bag, save.out = TRUE,
   path = NULL, ProcessNum)
 }
@@ -30,9 +30,9 @@ DreamAI_Bagging(data, k = 10, maxiter_MF = 10, ntree = 100,
 
 \item{gamma_ADMIN}{parameter for ADMIN to control abundance dependent missing. Set gamma_ADMIN=0 for log ratio intensity data. For abundance data put gamma_ADMIN=NA, and it will be estimated accordingly}
 
-\item{gamma}{parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Birnn}
+\item{gamma}{parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Brinn}
 
-\item{CV}{a logical value indicating whether to fit the best gamma with cross validation for "Birnn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.}
+\item{CV}{a logical value indicating whether to fit the best gamma with cross validation for "Brinn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.}
 
 \item{fillmethod}{a string identifying the method to be used to initially filling the missing values using simple imputation for "RegImpute". That could be "row_mean" or "zeros", with "row_mean" being the default. It throws an warning if "row_median" is used.}
 
@@ -42,7 +42,7 @@ DreamAI_Bagging(data, k = 10, maxiter_MF = 10, ntree = 100,
 
 \item{iter_SpectroFM}{number of iterations for "SpectroFM"}
 
-\item{method}{a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM, "RegImpute") based on which "Ensemble" imputed matrix will be obtained}
+\item{method}{a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute") based on which "Ensemble" imputed matrix will be obtained}
 
 \item{out}{a vector of imputation methods for which the function will output the imputed matrices. Default is "Ensemble".}
 
@@ -60,7 +60,7 @@ DreamAI_Bagging(data, k = 10, maxiter_MF = 10, ntree = 100,
 list of imputed dataset(average over all pseudo imputed data matrices) by different methods as specified by the user, n.bag and a matrix containing gene name, sample name, true and imputed values of every pseudo missing combined from n.bag datasets
 }
 \description{
-The function DreamAI_bagging imputes a dataset with missing values or NA's by bag imputaion with help of parallel processing. Pseudo datasets are generated having true missing (as in the original dataset) and pseudo missing and every such pseudo dataset is imputed by 7 different methods: KNN, MissForest, ADMIN, Birnn, SpectroFM, RegImpute and Ensemble (descriptions are included in the documentation of the function DreamAI).
+The function DreamAI_bagging imputes a dataset with missing values or NA's by bag imputaion with help of parallel processing. Pseudo datasets are generated having true missing (as in the original dataset) and pseudo missing and every such pseudo dataset is imputed by 7 different methods: KNN, MissForest, ADMIN, Brinn, SpectroFM, RegImpute and Ensemble (descriptions are included in the documentation of the function DreamAI).
 }
 \details{
 This function can be run as parallel job in cluster. It generates and saves a .RData file containing the output from the current process in the location provided by the user, with the process number in the file name. If the user runs it in local computer multiple times, then changing the ProcessNumber everytime will generate and save .RData file with the given ProcessNumber.
@@ -69,7 +69,7 @@ This function can be run as parallel job in cluster. It generates and saves a .R
 \dontrun{
 data(datapnnl)
 data<-datapnnl.rm.ref[1:100,1:21]
-impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method = c("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\\\Users\\\\chowds14\\\\Desktop\\\\test_package\\\\",ProcessNum=1)
+impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method = c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\\\Users\\\\chowds14\\\\Desktop\\\\test_package\\\\",ProcessNum=1)
 impute$Ensemble
 }
 }
