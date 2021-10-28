@@ -143,7 +143,7 @@ CV.mse <- function(x.imp, x.true, v.posi)
 
 #'
 #' @title Imputation of Missing Protein Abundances using IRNN-SCAD Algorithm
-#' @description The function impute.Brinn imputes a dataset with missing values or NA's using IRNN-SCAD Algorithm
+#' @description The function impute.Birnn imputes a dataset with missing values or NA's using IRNN-SCAD Algorithm
 #' @param x dataset in the form of a matrix or data frame with either NAs or 0s as missings
 #' @param gamma the parameter of  the nonconvex surrogate function of L0 norm.
 #'              The default \code{gamma = 50} works well for a 7000 * 80 protein-sample matrix.
@@ -157,11 +157,11 @@ CV.mse <- function(x.imp, x.true, v.posi)
 #' \dontrun{
 #' data(datapnnl)
 #' data<-datapnnl.rm.ref[1:100,1:21]
-#' impute.Brinn(data=as.matrix(data), gamma = 50, CV = FALSE)
+#' impute.Birnn(data=as.matrix(data), gamma = 50, CV = FALSE)
 #' }
 #' @export
 #'
-impute.Brinn <- function (x, gamma = gamma, CV = CV)
+impute.Birnn <- function (x, gamma = gamma, CV = CV)
 {
   x[is.na(x)] <- 0
   if (CV) {
