@@ -1,5 +1,5 @@
 #' Imputation of Missing Protein Abundances with Iterative Prediction Model
-#' @description The function DreamAI imputes a dataset with missing values or NA's using 7 different methods: "KNN": k nearest neighbor, "MissForest": nonparametric Missing Value Imputation using Random Forest, "ADMIN": abundance dependent missing imputation, "Brinn": imputation using IRNN-SCAD algorithm, "SpectroFM": imputation using matrix factorization, "RegImpute": imputation using Glmnet ridge regression and "Ensemble": aggregation of the 6 methods using simple average.
+#' @description The function DreamAI imputes a dataset with missing values or NA's using 7 different methods: "KNN": k nearest neighbor, "MissForest": nonparametric Missing Value Imputation using Random Forest, "ADMIN": abundance dependent missing imputation, "Birnn": imputation using IRNN-SCAD algorithm, "SpectroFM": imputation using matrix factorization, "RegImpute": imputation using Glmnet ridge regression and "Ensemble": aggregation of the 6 methods using simple average.
 #'
 #' @param data dataset in the form of a matrix or dataframe with missing values or NA's. The function throws an error message and stops if any row or column in the dataset is missing all values
 #' @param k number of neighbors to be used in the imputation by KNN and ADMIN (default is 10)
@@ -9,13 +9,13 @@
 #' @param maxiter_ADMIN maximum number of iteration to be performed in the imputation by "ADMIN" if the stopping criteria is not met beforehand
 #' @param tol convergence threshold for "ADMIN"
 #' @param gamma_ADMIN parameter for ADMIN to control abundance dependent missing. Set gamma_ADMIN=0 for log ratio intensity data. For abundance data put gamma_ADMIN=NA, and it will be estimated accordingly
-#' @param gamma parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Brinn
-#' @param CV a logical value indicating whether to fit the best gamma with cross validation for "Brinn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.
+#' @param gamma parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Birnn
+#' @param CV a logical value indicating whether to fit the best gamma with cross validation for "Birnn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.
 #' @param fillmethod a string identifying the method to be used to initially filling the missing values using simple imputation for "RegImpute". That could be "row_mean" or "zeros", with "row_mean" being the default. It throws an warning if "row_median" is used.
 #' @param maxiter_RegImpute maximum number of iterations to reach convergence in the imputation by "RegImpute"
 #' @param conv_nrmse convergence threshold for "RegImpute"
 #' @param iter_SpectroFM number of iterations for "SpectroFM"
-#' @param method a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute") based on which "Ensemble" imputed matrix will be obtained.  
+#' @param method a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM, "RegImpute") based on which "Ensemble" imputed matrix will be obtained.  
 #' @param out a vector of imputation methods for which the function will output the imputed matrices. Default is "Ensemble".  
 #' 
 #'@note If all methods are specified for obtaining "Ensemble" imputed matrix, the approximate time required to output the imputed matrix for a dataset of dimension 26000 x 200 is ~50 hours.
@@ -26,10 +26,10 @@
 #' \dontrun{
 #' data(datapnnl)
 #' data<-datapnnl.rm.ref[1:100,1:21]
-#' impute<- DreamAI(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40, method = c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),out="Ensemble")
+#' impute<- DreamAI(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40, method = c("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),out="Ensemble")
 #' impute$Ensemble
 #' }
-DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute"),out=c("Ensemble"))
+DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Birnn","SpectroFM","RegImpute"),out=c("Ensemble"))
 {
   missing_rows = (which(rowSums(is.na(data))==dim(data)[2]))
   if(length(missing_rows)>0){
@@ -46,7 +46,7 @@ DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter
   # data = subset(data, (colSums(is.na(data))!=dim(data)[1]))
 
   ### method of imputation ###
-  methods<-c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute")
+  methods<-c("KNN","MissForest","ADMIN","Birnn","SpectroFM","RegImpute")
   
   methods.match<- methods[which(methods %in% method)]
   
@@ -104,16 +104,16 @@ DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter
   }
 
   
-  # ## Brinn ##
-  if("Brinn" %in% method)
+  # ## Birnn ##
+  if("Birnn" %in% method)
   {
     sink("NULL")
-    d.impute.Brinn=impute.Brinn(as.matrix(data), gamma = 50, CV = CV)
-    ensemble<-ensemble+d.impute.Brinn
+    d.impute.Birnn=impute.Birnn(as.matrix(data), gamma = 50, CV = CV)
+    ensemble<-ensemble+d.impute.Birnn
     sink()
     print(paste("Method",method.idx,"complete"))
     method.idx<-method.idx+1
-    imputed_matrix<-c(imputed_matrix,list("Brinn"=as.matrix(d.impute.Brinn)))
+    imputed_matrix<-c(imputed_matrix,list("Birnn"=as.matrix(d.impute.Birnn)))
   }
 
   ## SpectroFM ##
@@ -172,11 +172,11 @@ DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter
         }
     }
     
-    if("Brinn" %in% out)
+    if("Birnn" %in% out)
     {
-      if("Brinn" %in% method){
-        out_matrix<-c(out_matrix,list("Brinn"=as.matrix(d.impute.Brinn)))}else{
-          print("Brinn is not specified")
+      if("Birnn" %in% method){
+        out_matrix<-c(out_matrix,list("Birnn"=as.matrix(d.impute.Birnn)))}else{
+          print("Birnn is not specified")
         }
     }  
     
@@ -203,10 +203,10 @@ DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter
   
 
   # sink("NULL")
-  # ensemble<- (d.impute.knn+d.impute.MF+d.impute.ADMIN+d.impute.Brinn+d.impute.SpectroFM+d.impute.RegImpute)/length(methods)
+  # ensemble<- (d.impute.knn+d.impute.MF+d.impute.ADMIN+d.impute.Birnn+d.impute.SpectroFM+d.impute.RegImpute)/length(methods)
   # sink()
   # 
-  # imputed_matrix=list("KNN"=as.matrix(d.impute.knn),"MissForest"=as.matrix(d.impute.MF),"ADMIN"=as.matrix(d.impute.ADMIN),"Brinn"=as.matrix(d.impute.Brinn),"SpectroFM"=as.matrix(d.impute.SpectroFM),"RegImpute"=as.matrix(d.impute.RegImpute),"Ensemble"=as.matrix(ensemble))
+  # imputed_matrix=list("KNN"=as.matrix(d.impute.knn),"MissForest"=as.matrix(d.impute.MF),"ADMIN"=as.matrix(d.impute.ADMIN),"Birnn"=as.matrix(d.impute.Birnn),"SpectroFM"=as.matrix(d.impute.SpectroFM),"RegImpute"=as.matrix(d.impute.RegImpute),"Ensemble"=as.matrix(ensemble))
   # 
   #num<-which(method %in% out)
 
