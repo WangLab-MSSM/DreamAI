@@ -36,7 +36,7 @@ DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter
           "To install: \n", "BiocManager::install("impute") \n",  
           call. = FALSE)  
    } 
-  base::library(impute)
+  #base::library(impute)
   
   missing_rows = (which(rowSums(is.na(data))==dim(data)[2]))
   if(length(missing_rows)>0){
