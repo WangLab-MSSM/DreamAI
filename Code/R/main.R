@@ -50,12 +50,17 @@ DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter
   
   methods.match<- methods[which(methods %in% method)]
   
-  if(length(methods.match)==0)
+  n.method = length(methods.match)
+  
+  if(n.method==0)
   {
     sink()
     return(print("specify method"))
   }
     
+  message(paste('\n',n.method,'methods specified, ensemble imputation will generated based on those algorithms:\n',
+              paste0(methods.match,collapse = ', '),'\n'))
+
   ensemble<-matrix(0,nrow(data),ncol(data))
   method.idx<-1
   imputed_matrix=list()
@@ -144,7 +149,7 @@ DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter
 
   ## Ensemble ##
   
-    ensemble<-ensemble/length(method)
+    ensemble<-ensemble/n.method
     imputed_matrix<-c(imputed_matrix,list("Ensemble"=as.matrix(ensemble)))
     
     
@@ -203,7 +208,7 @@ DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter
   
 
   # sink("NULL")
-  # ensemble<- (d.impute.knn+d.impute.MF+d.impute.ADMIN+d.impute.Birnn+d.impute.SpectroFM+d.impute.RegImpute)/length(methods)
+  # ensemble<- (d.impute.knn+d.impute.MF+d.impute.ADMIN+d.impute.Birnn+d.impute.SpectroFM+d.impute.RegImpute)/n.method
   # sink()
   # 
   # imputed_matrix=list("KNN"=as.matrix(d.impute.knn),"MissForest"=as.matrix(d.impute.MF),"ADMIN"=as.matrix(d.impute.ADMIN),"Birnn"=as.matrix(d.impute.Birnn),"SpectroFM"=as.matrix(d.impute.SpectroFM),"RegImpute"=as.matrix(d.impute.RegImpute),"Ensemble"=as.matrix(ensemble))
