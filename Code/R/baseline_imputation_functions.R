@@ -56,15 +56,7 @@ knn.est.it2 = function(data, k, m.ind=T)
 #' impute.KNN(data=as.matrix(data), k=10)
 #' }
 impute.KNN = function(data,k)
-{
-  if (!requireNamespace("impute", quietly = TRUE)) {
-    stop("\n package ", "impute", " is not yet installed \n", 
-         "To install: \n", "BiocManager::install("impute") \n",  
-         call. = FALSE)  
-  }
-  
-  library(impute)
-  
+{  
   norm.temp = my.normlize((data));
 
   data.new = (norm.temp[[1]]);
@@ -134,15 +126,7 @@ impute.MF = function(data = as.matrix(data),maxiter_MF, ntree, maxnodes)
 #' impute.ADMIN(data = as.matrix(data),k = 10, maxiter_ADMIN = 30, tol = 10^(-2))
 #' }
 impute.ADMIN = function(data,data.ini=NA,gamma, k, maxiter_ADMIN,tol)
-{
-   if (!requireNamespace("impute", quietly = TRUE)) {
-    stop("\n package ", "impute", " is not yet installed \n", 
-         "To install: \n", "BiocManager::install("impute") \n",  
-         call. = FALSE)  
-  }
-  
-  library(impute)
-  
+{ 
   L = dim(data)[1];
   iter = 0;
   diff = 999;
