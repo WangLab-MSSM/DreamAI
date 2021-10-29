@@ -31,13 +31,12 @@
 #' }
 DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Birnn","SpectroFM","RegImpute"),out=c("Ensemble"))
 {
-  if (!requireNamespace("impute", quietly = TRUE)) {
-    stop("\n package ", "impute", " is not yet installed \n", 
-         "To install: \n", "BiocManager::install("impute") \n",  
-         call. = FALSE)  
-  }
-  
-  library(impute)
+#  if (!requireNamespace("impute", quietly = TRUE)) {
+#    stop("\n package ", "impute", " is not yet installed \n", 
+#         "To install: \n", "BiocManager::install("impute") \n",  
+#         call. = FALSE)  
+#  } 
+#  library(impute)
   
   missing_rows = (which(rowSums(is.na(data))==dim(data)[2]))
   if(length(missing_rows)>0){
