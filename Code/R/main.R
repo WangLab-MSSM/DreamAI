@@ -31,12 +31,40 @@
 #' }
 DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Birnn","SpectroFM","RegImpute"),out=c("Ensemble"))
 {
-  if (!base::requireNamespace("impute", quietly = TRUE)) {
-     base::stop("\n package ", "impute", " is not yet installed \n", 
-          "To install: \n", "BiocManager::install(\"impute\") \n",  
-          call. = FALSE)  
-   } 
-  base::library(impute)
+  pkg.all = c("cluster"
+            ,"survival"
+            ,"randomForest"
+            ,"missForest"
+            ,"glmnet"
+            ,"Rcpp"
+            ,"foreach"
+            ,"itertools"
+            ,"iterators"
+            ,"Matrix"
+            ,"devtools"
+            ,"impute")
+  
+  pkg.req = pkg.all[!sapply(pkg.all,base::requireNamespace, quietly = T)]
+  if(length(pkg.req)>0)
+  {
+    base::stop(paste0("\nSome packages is not yet installed:\n  ", 
+                    paste(pkg.req,collapse = ', '), 
+                    ".\nPlease install them before running DreamAI. \n"),  
+             call. = FALSE)
+  }
+
+  library("cluster")
+  library("survival")
+  library("randomForest")
+  library("missForest")
+  library("glmnet")
+  library("Rcpp")
+  library("foreach")
+  library("itertools")
+  library("iterators")
+  library("Matrix")
+  library("devtools")
+  library("impute")
   
   missing_rows = (which(rowSums(is.na(data))==dim(data)[2]))
   if(length(missing_rows)>0){
