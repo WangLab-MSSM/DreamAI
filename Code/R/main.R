@@ -83,6 +83,14 @@ DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter
   ### method of imputation ###
   methods<-c("KNN","MissForest","ADMIN","Birnn","SpectroFM","RegImpute")
   
+  if(length(setdiff(method,methods))>0)
+  {
+    stop(paste0('\nNot identifiable input methods: ',
+              paste(setdiff(method,methods),collapse = ', '),
+              '.\nPlease select methods from the six components: ',
+              paste(methods,collapse = ', '),'.\n'))
+  }
+  
   methods.match<- methods[which(methods %in% method)]
   
   n.method = length(methods.match)
