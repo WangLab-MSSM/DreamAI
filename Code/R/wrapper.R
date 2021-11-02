@@ -1,6 +1,6 @@
 #' Wrapper function for summarizing the outputs from DreamAI_bagging
 #'
-#' @param method a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute", "Ensemble"). This vector should be a subset or equal to the vector out in DreamAI_bagging.
+#' @param method a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM, "RegImpute", "Ensemble"). This vector should be a subset or equal to the vector out in DreamAI_bagging.
 #' @param nNodes number of parallel processes 
 #' @param path location where the bagging output is saved
 #'
@@ -11,12 +11,12 @@
 #' \dontrun{
 #' data(datapnnl)
 #' data<-datapnnl.rm.ref[1:100,1:21]
-#' impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\Users\\chowds14\\Desktop\\test_package\\",ProcessNum=1)
+#' impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method=c("KNN","MissForest","ADMIN","Birnn","SpectroFM","RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\Users\\chowds14\\Desktop\\test_package\\",ProcessNum=1)
 #' final.out<-bag.summary(method=c("Ensemble"),nNodes=2,path="C:\\Users\\chowds14\\Desktop\\test_package\\")
 #' final.out$score
 #' final.out$imputed_data
 #' }
-bag.summary<-function(method=c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute","Ensemble"),nNodes=2,path=NULL)
+bag.summary<-function(method=c("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute","Ensemble"),nNodes=2,path=NULL)
 {
   load(paste(path,"bag_imputed_",sprintf("%03d",1),".RData",sep=""))
   out<-bag.output$out.method
@@ -31,7 +31,7 @@ bag.summary<-function(method=c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM
   MF.out<-list()
   ADMIN.out<-list()
   Reg_Impute.out<-list()
-  Brinn.out<-list()
+  Birnn.out<-list()
   SpectroFM.out<-list()
   Ensemble.out<-list()
   
@@ -77,11 +77,11 @@ bag.summary<-function(method=c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM
       }
     
     
-    if("Brinn" %in% method){
-      Brinn.out[[i]]<-bag.output$impute$Brinn
+    if("Birnn" %in% method){
+      Birnn.out[[i]]<-bag.output$impute$Birnn
     }else{
       sink("NULL")
-      print("No output for Brinn")
+      print("No output for Birnn")
       sink()
       }
     
@@ -128,8 +128,8 @@ bag.summary<-function(method=c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM
   d.impute.ADMIN<-matrix(0,nrow(ADMIN.out[[1]]),ncol(ADMIN.out[[1]]))
   }
   
-  if("Brinn" %in% method){
-  d.impute.Brinn<-matrix(0,nrow(Brinn.out[[1]]),ncol(Brinn.out[[1]]))
+  if("Birnn" %in% method){
+  d.impute.Birnn<-matrix(0,nrow(Birnn.out[[1]]),ncol(Birnn.out[[1]]))
   }
   
   if("RegImpute" %in% method){
@@ -157,8 +157,8 @@ bag.summary<-function(method=c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM
     d.impute.ADMIN<-d.impute.ADMIN+n.bag.out[[i]]*ADMIN.out[[i]]
     }
     
-    if("Brinn" %in% method){
-    d.impute.Brinn<-d.impute.Brinn+n.bag.out[[i]]*Brinn.out[[i]]
+    if("Birnn" %in% method){
+    d.impute.Birnn<-d.impute.Birnn+n.bag.out[[i]]*Birnn.out[[i]]
     }
     
     if("RegImpute" %in% method){
@@ -190,9 +190,9 @@ bag.summary<-function(method=c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM
   imputed_matrix<-c(imputed_matrix,list("ADMIN"=as.matrix(d.impute.ADMIN.final)))
   }
   
-  if("Brinn" %in% method){
-  d.impute.Brinn.final<-d.impute.Brinn/n.bag.tot
-  imputed_matrix<-c(imputed_matrix,list("Brinn"=as.matrix(d.impute.Brinn.final)))
+  if("Birnn" %in% method){
+  d.impute.Birnn.final<-d.impute.Birnn/n.bag.tot
+  imputed_matrix<-c(imputed_matrix,list("Birnn"=as.matrix(d.impute.Birnn.final)))
   }
   
   if("RegImpute" %in% method){
@@ -209,7 +209,7 @@ bag.summary<-function(method=c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM
   imputed_matrix<-c(imputed_matrix,list("Ensemble"=as.matrix(d.impute.Ensemble.final)))
   
 
-  # methods<-c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute")
+  # methods<-c("KNN","MissForest","ADMIN","Birnn","SpectroFM","RegImpute")
   # 
   # num<-which(methods %in% method)
   #

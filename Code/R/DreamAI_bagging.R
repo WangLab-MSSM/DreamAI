@@ -22,7 +22,7 @@ diff.mr = function(x,gm.pnnl,data.pnnl.b,N){
 
 
 #' Bag Imputation of Missing Protein Abundances with Iterative Prediction Model
-#' @description The function DreamAI_bagging imputes a dataset with missing values or NA's by bag imputaion with help of parallel processing. Pseudo datasets are generated having true missing (as in the original dataset) and pseudo missing and every such pseudo dataset is imputed by 7 different methods: KNN, MissForest, ADMIN, Brinn, SpectroFM, RegImpute and Ensemble (descriptions are included in the documentation of the function DreamAI). 
+#' @description The function DreamAI_bagging imputes a dataset with missing values or NA's by bag imputaion with help of parallel processing. Pseudo datasets are generated having true missing (as in the original dataset) and pseudo missing and every such pseudo dataset is imputed by 7 different methods: KNN, MissForest, ADMIN, Birnn, SpectroFM, RegImpute and Ensemble (descriptions are included in the documentation of the function DreamAI). 
 #' @details This function can be run as parallel job in cluster. It generates and saves a .RData file containing the output from the current process in the location provided by the user, with the process number in the file name. If the user runs it in local computer multiple times, then changing the ProcessNumber everytime will generate and save .RData file with the given ProcessNumber. 
 #'
 #' @param data dataset in the form of a matrix or dataframe with missing values or NA's. The function throws an error message and stops if any row or column in the dataset is missing all values
@@ -33,13 +33,13 @@ diff.mr = function(x,gm.pnnl,data.pnnl.b,N){
 #' @param maxiter_ADMIN maximum number of iteration to be performed in the imputation by "ADMIN" if the stopping criteria is not met beforehand
 #' @param tol convergence threshold for "ADMIN"
 #' @param gamma_ADMIN parameter for ADMIN to control abundance dependent missing. Set gamma_ADMIN=0 for log ratio intensity data. For abundance data put gamma_ADMIN=NA, and it will be estimated accordingly
-#' @param gamma parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Brinn
-#' @param CV a logical value indicating whether to fit the best gamma with cross validation for "Brinn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.
+#' @param gamma parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Birnn
+#' @param CV a logical value indicating whether to fit the best gamma with cross validation for "Birnn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.
 #' @param fillmethod a string identifying the method to be used to initially filling the missing values using simple imputation for "RegImpute". That could be "row_mean" or "zeros", with "row_mean" being the default. It throws an warning if "row_median" is used.
 #' @param maxiter_RegImpute maximum number of iterations to reach convergence in the imputation by "RegImpute"
 #' @param conv_nrmse convergence threshold for "RegImpute"
 #' @param iter_SpectroFM number of iterations for "SpectroFM"
-#' @param method a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM, "RegImpute") based on which "Ensemble" imputed matrix will be obtained
+#' @param method a vector of imputation methods: ("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM, "RegImpute") based on which "Ensemble" imputed matrix will be obtained
 #' @param out a vector of imputation methods for which the function will output the imputed matrices. Default is "Ensemble".  
 #' @param SamplesPerBatch number of samples per batch (batch size in the original data)
 #' @param n.bag number of pseudo datasets to generate and impute in the current process
@@ -53,11 +53,12 @@ diff.mr = function(x,gm.pnnl,data.pnnl.b,N){
 #' \dontrun{
 #' data(datapnnl)
 #' data<-datapnnl.rm.ref[1:100,1:21]
-#' impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method = c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\Users\\chowds14\\Desktop\\test_package\\",ProcessNum=1)
+#' impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method = c("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\Users\\chowds14\\Desktop\\test_package\\",ProcessNum=1)
 #' impute$Ensemble
 #' }
-DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method = c("KNN", "MissForest", "ADMIN", "Brinn", "SpectroFM", "RegImpute"),out=c("Ensemble"),SamplesPerBatch,n.bag,save.out=TRUE,path=NULL,ProcessNum)
+DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method = c("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),out=c("Ensemble"),SamplesPerBatch,n.bag,save.out=TRUE,path=NULL,ProcessNum)
 {
+ 
   data.pnnl = data[rowMeans(is.na(data))!=1,];
   
   # data.pnnl.b <<- avg.batch(data.pnnl,SamplesPerBatch=SamplesPerBatch)
@@ -116,7 +117,7 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
     
     summary.all[[i]]<-d.s
     
-    methods<-c("KNN","MissForest","ADMIN","Brinn","SpectroFM","RegImpute")
+    methods<-c("KNN","MissForest","ADMIN","Birnn","SpectroFM","RegImpute")
     
     if("KNN" %in% out){
       bag.knn.sum <- bag.knn.sum+(c(ResultDreamImputation$KNN))[true.miss]
@@ -130,8 +131,8 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
     bag.ADMIN.sum <- bag.ADMIN.sum+(c(ResultDreamImputation$ADMIN))[true.miss]
     }
     
-    if("Brinn" %in% out){
-    bag.BruinGo.sum <- bag.BruinGo.sum+(c(ResultDreamImputation$Brinn))[true.miss]
+    if("Birnn" %in% out){
+    bag.BruinGo.sum <- bag.BruinGo.sum+(c(ResultDreamImputation$Birnn))[true.miss]
     }
     
     if("SpectroFM" %in% out){
@@ -176,11 +177,11 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
   imputed_matrix<-c(imputed_matrix,list("ADMIN"=bag.ADMIN))
   }
   
-  if("Brinn" %in% out){
+  if("Birnn" %in% out){
   bag.BruinGo.v<- bag.BruinGo.sum/n.bag
   data.v[true.miss]<-bag.BruinGo.v
   bag.BruinGo<-matrix(data.v,nrow(data))
-  imputed_matrix<-c(imputed_matrix,list("Brinn"=bag.BruinGo))
+  imputed_matrix<-c(imputed_matrix,list("Birnn"=bag.BruinGo))
   }
   
   if("SpectroFM" %in% out){
