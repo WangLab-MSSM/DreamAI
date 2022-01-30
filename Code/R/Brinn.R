@@ -163,6 +163,7 @@ CV.mse <- function(x.imp, x.true, v.posi)
 #'
 impute.Birnn <- function (x, gamma = gamma, CV = CV)
 {
+  x0 = x
   x[is.na(x)] <- 0
   if (CV) {
     g = gamma.CV(x)
@@ -187,6 +188,7 @@ impute.Birnn <- function (x, gamma = gamma, CV = CV)
   XRec <- as.data.frame(mc.IRNN(scad_sg, y, IDX, m, n, g, x.mean))
   colnames(XRec) <- colnames(x)
   rownames(XRec) <- rownames(x)
+  XRec[!is.na(x0)] = x0[!is.na(x0)]
   return(XRec)
 }
 
