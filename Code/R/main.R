@@ -101,7 +101,7 @@ DreamAI<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter
     return(print("specify method"))
   }
     
-  message(paste('\n',n.method,'methods specified, ensemble imputation will generated based on those algorithms:\n',
+  message(paste('\n',n.method,'methods specified, ensemble imputation will be generated with those algorithms:\n',
               paste0(methods.match,collapse = ', '),'\n'))
 
   ensemble<-matrix(0,nrow(data),ncol(data))
