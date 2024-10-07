@@ -32,6 +32,7 @@ diff.mr = function(x,gm.pnnl,data.pnnl.b,N){
 #' @param maxnodes maximum number of terminal nodes for trees in the forest in "MissForest", has to equal at least the number of columns in the given data
 #' @param maxiter_ADMIN maximum number of iteration to be performed in the imputation by "ADMIN" if the stopping criteria is not met beforehand
 #' @param tol convergence threshold for "ADMIN"
+#' @param gamma_bagging parameter to control abundance-dependence for pseudo missing values generation in bagging sets. Set gamma_bagging = NA, to learn the abundance-dependence from the observed data matrix. Set gamma_bagging = 0 to generate abundance-independent pseudo missing values.
 #' @param gamma_ADMIN parameter for ADMIN to control abundance dependent missing. Set gamma_ADMIN=0 for log ratio intensity data. For abundance data put gamma_ADMIN=NA, and it will be estimated accordingly
 #' @param gamma parameter of the supergradients of popular nonconvex surrogate functions, e.g. SCAD and MCP of L0-norm for Birnn
 #' @param CV a logical value indicating whether to fit the best gamma with cross validation for "Birnn". If CV=FALSE, default gamma=50 is used, while if CV=TRUE gamma is calculated using cross-validation.
@@ -53,17 +54,21 @@ diff.mr = function(x,gm.pnnl,data.pnnl.b,N){
 #' \dontrun{
 #' data(datapnnl)
 #' data<-datapnnl.rm.ref[1:100,1:21]
-#' impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method = c("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\Users\\chowds14\\Desktop\\test_package\\",ProcessNum=1)
+#' impute<- DreamAI_Bagging(data=data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_bagging=NA,gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method = c("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),out=c("Ensemble"),SamplesPerBatch=3,n.bag=2,save.out=TRUE,path="C:\\Users\\chowds14\\Desktop\\test_package\\",ProcessNum=1)
 #' impute$Ensemble
 #' }
-DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),gamma_ADMIN=NA,gamma=50,CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,method = c("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),out=c("Ensemble"),SamplesPerBatch,n.bag,save.out=TRUE,path=NULL,ProcessNum)
+DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL,maxiter_ADMIN=30,tol=10^(-2),
+                          gamma_bagging = NA, gamma_ADMIN=NA,gamma=50,
+                          CV=FALSE,fillmethod="row_mean",maxiter_RegImpute=10,conv_nrmse = 1e-6,iter_SpectroFM=40,
+                          method = c("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),out=c("Ensemble"),
+                          seed.bags = NULL,SamplesPerBatch,n.bag,save.out=TRUE,path=NULL,ProcessNum)
 {
  
   data.pnnl = data[rowMeans(is.na(data))!=1,];
   
   # data.pnnl.b <<- avg.batch(data.pnnl,SamplesPerBatch=SamplesPerBatch)
   data.pnnl.b <- avg.batch(data.pnnl,SamplesPerBatch=SamplesPerBatch)
-  gm.pnnl <- gamma.est(data.pnnl.b)
+  if(is.na(gamma_bagging)){gm.pnnl <- gamma.est(data.pnnl.b)}else{gm.pnnl = c(NA,gamma_bagging)}
   
   N <- sum(is.na(data.pnnl.b[!(apply(is.na(data.pnnl.b), 1, mean)==1),]))
   
@@ -84,11 +89,15 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
   bag.Jeremy.sum<-0
   bag.ensemble.sum<-0
   summary.all<-list()
+
+  if(length(seed.bags)!=n.bag)
+  seed.bags = 1:n.bag+1000000
+    
   for (i in 1:n.bag)
   {
-    TimeStart<-proc.time()
+    # TimeStart<-proc.time()
     
-    set.seed(i+1000);
+    set.seed(seed.bags[i]);
     m.missing.b = matrix(rbinom(length(p.pnnl), 1, c(p.pnnl)),dim(p.pnnl)[1]);
     m.missing = t(apply(m.missing.b,1,rep,each=SamplesPerBatch));
     # sum(m.missing.b-is.na(data.pnnl.b))
@@ -99,7 +108,7 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
     data.pnnl.new[m.missing!=t(is.na(apply(data.pnnl.b,1,rep,each=SamplesPerBatch)))] <- NA;
     
     
-    ResultDreamImputation<-DreamAI(data=data.pnnl.new,k=k,maxiter_MF = maxiter_MF, ntree = ntree,maxnodes = maxnodes,maxiter_ADMIN=maxiter_ADMIN,tol=tol,gamma_ADMIN=NA,gamma=gamma,CV=CV,fillmethod=fillmethod,maxiter_RegImpute=maxiter_RegImpute,conv_nrmse = conv_nrmse,iter_SpectroFM=iter_SpectroFM,method=method,out=out)
+    ResultDreamImputation<-DreamAI(data=data.pnnl.new,k=k,maxiter_MF = maxiter_MF, ntree = ntree,maxnodes = maxnodes,maxiter_ADMIN=maxiter_ADMIN,tol=tol,gamma_ADMIN=gamma_ADMIN,gamma=gamma,CV=CV,fillmethod=fillmethod,maxiter_RegImpute=maxiter_RegImpute,conv_nrmse = conv_nrmse,iter_SpectroFM=iter_SpectroFM,method=method,out=out)
     
     ########## summary ###############
     d.o<-as.matrix(data)
@@ -144,11 +153,9 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
     }
     
     bag.ensemble.sum <- bag.ensemble.sum+(c(ResultDreamImputation$Ensemble))[true.miss]
-    
-    TimeTaken<-round((proc.time()-TimeStart)[3]/60,3)
-    
+        
     cat("\n\n")
-    print(paste("bagging data ",i," complete - time taken ",TimeTaken," min",sep=""))
+    print(paste("imputation on bagging data ",i," completed",sep=""))
     cat("\n\n")
   }
   
