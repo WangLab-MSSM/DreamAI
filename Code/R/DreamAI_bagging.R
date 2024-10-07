@@ -95,7 +95,7 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
     
   for (i in 1:n.bag)
   {
-    TimeStart<-proc.time()
+    # TimeStart<-proc.time()
     
     set.seed(seed.bags[i]);
     m.missing.b = matrix(rbinom(length(p.pnnl), 1, c(p.pnnl)),dim(p.pnnl)[1]);
@@ -153,11 +153,9 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
     }
     
     bag.ensemble.sum <- bag.ensemble.sum+(c(ResultDreamImputation$Ensemble))[true.miss]
-    
-    TimeTaken<-round((proc.time()-TimeStart)[3]/60,3)
-    
+        
     cat("\n\n")
-    print(paste("bagging data ",i," complete - time taken ",TimeTaken," min",sep=""))
+    print(paste("imputation on bagging data ",i," completed",sep=""))
     cat("\n\n")
   }
   
