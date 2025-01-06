@@ -63,23 +63,23 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
                           method = c("KNN", "MissForest", "ADMIN", "Birnn", "SpectroFM", "RegImpute"),out=c("Ensemble"),
                           seed.bags = NULL,SamplesPerBatch,n.bag,save.out=TRUE,path=NULL,ProcessNum)
 {
- 
-  data.pnnl = data[rowMeans(is.na(data))!=1,];
+  if(sum(rowMeans(is.na(data))==1)>0){cat(paste('removing',sum(rowMeans(is.na(data))==1),'features with all missing values'))}
+  data.pnnl <- data[rowMeans(is.na(data))!=1,];
   
   # data.pnnl.b <<- avg.batch(data.pnnl,SamplesPerBatch=SamplesPerBatch)
   data.pnnl.b <- avg.batch(data.pnnl,SamplesPerBatch=SamplesPerBatch)
-  if(is.na(gamma_bagging)){gm.pnnl <- gamma.est(data.pnnl.b)}else{gm.pnnl = c(NA,gamma_bagging)}
+  if(is.na(gamma_bagging)){gm.pnnl <- gamma.est(data.pnnl.b)}else{gm.pnnl <- c(NA,gamma_bagging)}
   
   N <- sum(is.na(data.pnnl.b[!(apply(is.na(data.pnnl.b), 1, mean)==1),]))
   
   
-  gm1.new = optimize(f = diff.mr,interval = c(-10,10),gm.pnnl=gm.pnnl,data.pnnl.b=data.pnnl.b,N=N)$minimum
+  gm1.new <- optimize(f = diff.mr,interval = c(-10,10),gm.pnnl=gm.pnnl,data.pnnl.b=data.pnnl.b,N=N)$minimum
   
-  p.pnnl = exp(gm1.new-gm.pnnl[2]*data.pnnl.b);
-  p.pnnl[is.na(p.pnnl)] = 1;
+  p.pnnl <- exp(gm1.new-gm.pnnl[2]*data.pnnl.b);
+  p.pnnl[is.na(p.pnnl)] <- 1;
   
   # results<-NULL
-  data.v<-c(as.matrix(data))
+  data.v<-c(as.matrix(data.pnnl))
   true.miss <- which(is.na(data.v))
   bag.knn.sum<-0
   bag.MissForest.sum<-0
@@ -91,19 +91,19 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
   summary.all<-list()
 
   if(length(seed.bags)!=n.bag)
-  seed.bags = 1:n.bag+1000000
+  seed.bags <- 1:n.bag+1000000
     
   for (i in 1:n.bag)
   {
     # TimeStart<-proc.time()
     
     set.seed(seed.bags[i]);
-    m.missing.b = matrix(rbinom(length(p.pnnl), 1, c(p.pnnl)),dim(p.pnnl)[1]);
-    m.missing = t(apply(m.missing.b,1,rep,each=SamplesPerBatch));
+    m.missing.b <- matrix(rbinom(length(p.pnnl), 1, c(p.pnnl)),dim(p.pnnl)[1]);
+    m.missing <- t(apply(m.missing.b,1,rep,each=SamplesPerBatch));
     # sum(m.missing.b-is.na(data.pnnl.b))
     #print(sum(m.missing!=t(is.na(apply(data.pnnl.b,1,rep,each=SamplesPerBatch)))));
     
-    data.pnnl.new = data.pnnl;
+    data.pnnl.new <- data.pnnl;
     data.pnnl.new<-as.matrix(data.pnnl.new)
     data.pnnl.new[m.missing!=t(is.na(apply(data.pnnl.b,1,rep,each=SamplesPerBatch)))] <- NA;
     
@@ -111,15 +111,15 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
     ResultDreamImputation<-DreamAI(data=data.pnnl.new,k=k,maxiter_MF = maxiter_MF, ntree = ntree,maxnodes = maxnodes,maxiter_ADMIN=maxiter_ADMIN,tol=tol,gamma_ADMIN=gamma_ADMIN,gamma=gamma,CV=CV,fillmethod=fillmethod,maxiter_RegImpute=maxiter_RegImpute,conv_nrmse = conv_nrmse,iter_SpectroFM=iter_SpectroFM,method=method,out=out)
     
     ########## summary ###############
-    d.o<-as.matrix(data)
+    d.o<-as.matrix(data.pnnl)
     d.p<-data.pnnl.new
     d.i<-ResultDreamImputation$Ensemble
     
-    d.s = cbind(c(d.p),c(d.i))
+    d.s <- cbind(c(d.p),c(d.i))
     
-    ind.pseudo = as.logical(is.na(c(d.p))-is.na(c(d.o)));
+    ind.pseudo <- as.logical(is.na(c(d.p))-is.na(c(d.o)));
     
-    d.s = cbind.data.frame(gene = rep(rownames(d.o),ncol(d.o))[ind.pseudo],
+    d.s <- cbind.data.frame(gene = rep(rownames(d.o),ncol(d.o))[ind.pseudo],
                            sample = rep(colnames(d.o),each = nrow(d.o))[ind.pseudo],
                            true = (c(d.o))[ind.pseudo],
                            imputed = c(d.i)[ind.pseudo]);
@@ -151,65 +151,72 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
     if("RegImpute" %in% out){
     bag.Jeremy.sum <- bag.Jeremy.sum+(c(ResultDreamImputation$RegImpute))[true.miss]
     }
-    
+    if("Ensemble" %in% out){
     bag.ensemble.sum <- bag.ensemble.sum+(c(ResultDreamImputation$Ensemble))[true.miss]
-        
+    }    
     cat("\n\n")
     print(paste("imputation on bagging data ",i," completed",sep=""))
     cat("\n\n")
   }
   
-  summary.all1 = do.call(rbind,summary.all);
+  summary.all1 <- do.call(rbind,summary.all);
   
   imputed_matrix<-list()
   
   if("KNN" %in% out){
     bag.knn.v<- bag.knn.sum/n.bag
-    data.v[true.miss]<-bag.knn.v
-    bag.knn<-matrix(data.v,nrow(data))
+    data.temp <- data.v
+    data.temp[true.miss]<-bag.knn.v
+    bag.knn<-matrix(data.temp,nrow(data.pnnl),dimnames = dimnames(data.pnnl))
     imputed_matrix<-c(imputed_matrix,list("KNN"=bag.knn))
   }
 
   if("MissForest" %in% out){
   bag.MissForest.v<- bag.MissForest.sum/n.bag
-  data.v[true.miss]<-bag.MissForest.v
-  bag.MissForest<-matrix(data.v,nrow(data))
+  data.temp <- data.v
+  data.temp[true.miss]<-bag.MissForest.v
+  bag.MissForest<-matrix(data.temp,nrow(data.pnnl),dimnames = dimnames(data.pnnl))
   imputed_matrix<-c(imputed_matrix,list("MissForest"=bag.MissForest))
   }
   
   if("ADMIN" %in% out){
   bag.ADMIN.v<- bag.ADMIN.sum/n.bag
-  data.v[true.miss]<-bag.ADMIN.v
-  bag.ADMIN<-matrix(data.v,nrow(data))
+  data.temp <- data.v
+  data.temp[true.miss]<-bag.ADMIN.v
+  bag.ADMIN<-matrix(data.temp,nrow(data.pnnl),dimnames = dimnames(data.pnnl))
   imputed_matrix<-c(imputed_matrix,list("ADMIN"=bag.ADMIN))
   }
   
   if("Birnn" %in% out){
   bag.BruinGo.v<- bag.BruinGo.sum/n.bag
-  data.v[true.miss]<-bag.BruinGo.v
-  bag.BruinGo<-matrix(data.v,nrow(data))
+  data.temp <- data.v
+  data.temp[true.miss]<-bag.BruinGo.v
+  bag.BruinGo<-matrix(data.temp,nrow(data.pnnl),dimnames = dimnames(data.pnnl))
   imputed_matrix<-c(imputed_matrix,list("Birnn"=bag.BruinGo))
   }
   
   if("SpectroFM" %in% out){
   bag.DMIS.v<- bag.DMIS.sum/n.bag
-  data.v[true.miss]<-bag.DMIS.v
-  bag.DMIS<-matrix(data.v,nrow(data))
+  data.temp <- data.v
+  data.temp[true.miss]<-bag.DMIS.v
+  bag.DMIS<-matrix(data.temp,nrow(data.pnnl),dimnames = dimnames(data.pnnl))
   imputed_matrix<-c(imputed_matrix,list("SpectroFM"=bag.DMIS))
   }
   
   if("RegImpute" %in% out){
   bag.Jeremy.v<- bag.Jeremy.sum/n.bag
-  data.v[true.miss]<-bag.Jeremy.v
-  bag.Jeremy<-matrix(data.v,nrow(data))
+  data.temp <- data.v
+  data.temp[true.miss]<-bag.Jeremy.v
+  bag.Jeremy<-matrix(data.temp,nrow(data.pnnl),dimnames = dimnames(data.pnnl))
   imputed_matrix<-c(imputed_matrix,list("RegImpute"=bag.Jeremy))
   }
-  
+  if("Ensemble" %in% out){
   bag.ensemble.v<- bag.ensemble.sum/n.bag
-  data.v[true.miss]<-bag.ensemble.v
-  bag.ensemble<-matrix(data.v,nrow(data))
+  data.temp <- data.v
+  data.temp[true.miss]<-bag.ensemble.v
+  bag.ensemble<-matrix(data.temp,nrow(data.pnnl),dimnames = dimnames(data.pnnl))
   imputed_matrix<-c(imputed_matrix,list("Ensemble"=bag.ensemble))
-  
+  }
 
   bag.output<-list(impute=imputed_matrix,n.bag=n.bag,summary=summary.all1,out.method=out)
   
