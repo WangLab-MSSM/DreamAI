@@ -75,9 +75,9 @@ DreamAI_Bagging<-function(data,k=10,maxiter_MF = 10, ntree = 100,maxnodes = NULL
   
   gm1.new <- optimize(f = diff.mr,interval = c(-10,10),gm.pnnl=gm.pnnl,data.pnnl.b=data.pnnl.b,N=N)$minimum
   
-  p.pnnl <- exp(gm1.new-gm.pnnl[2]*data.pnnl.b);
-  p.pnnl[is.na(p.pnnl)] <- 1;
-  
+  p.pnnl <- exp(gm1.new-gm.pnnl[2]*data.pnnl.b)
+  p.pnnl[is.na(p.pnnl)] <- 1
+  p.pnnl[p.pnnl>1] <- 1
   # results<-NULL
   data.v<-c(as.matrix(data.pnnl))
   true.miss <- which(is.na(data.v))
