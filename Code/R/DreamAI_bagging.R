@@ -1,12 +1,12 @@
-gamma.est = function(Ym)
-{
-  ### Ym dim Lxn
-  Y.mean = apply(Ym,1,mean,na.rm=T);
-  q = apply(is.na(Ym),1,mean);
-  par = lsfit(Y.mean[q>0],log(1/q)[q>0])[[1]];
-  names(par) = c('gamma0','gamma');
-  return(par);
-}
+#gamma.est = function(Ym)
+#{
+#  ### Ym dim Lxn
+#  Y.mean = apply(Ym,1,mean,na.rm=T);
+#  q = apply(is.na(Ym),1,mean);
+#  par = lsfit(Y.mean[q>0],log(1/q)[q>0])[[1]];
+#  names(par) = c('gamma0','gamma');
+#  return(par);
+#}
 
 avg.batch = function(data,SamplesPerBatch)
 {
