@@ -131,6 +131,7 @@ returnTestSet<-function(col,filled,test_indices){
 #' @param fillmethod a string identifying the method to be used that could be "row_mean" or "zeros", with "row_mean" being the default. It throws an warning if "row_median" is used.
 #' @param maxiter_RegImpute a integer identifying maximum number of iterations to reach convergence
 #' @return the imputed version of the dataset
+#' @importFrom glmnet cv.glmnet
 #' @export
 #' @examples
 #' \dontrun{
@@ -162,7 +163,7 @@ impute.RegImpute <- function(data,fillmethod,maxiter_RegImpute,conv_nrmse){
       test = returnTestSet(col,filled,test_indices)
 
         #used http://ricardoscr.github.io/how-to-use-ridge-and-lasso-in-r.html as tutorial on ridge regression in R
-        cv_fit <- cv.glmnet(train, target, alpha=0, standardize=TRUE)
+        cv_fit <- glmnet::cv.glmnet(train, target, alpha=0, standardize=TRUE)
         opt_lambda = cv_fit$lambda.min
         fit = cv_fit$glmnet.fit
         
@@ -191,4 +192,5 @@ impute.RegImpute <- function(data,fillmethod,maxiter_RegImpute,conv_nrmse){
   }
   return(filled)
 }
+
 
